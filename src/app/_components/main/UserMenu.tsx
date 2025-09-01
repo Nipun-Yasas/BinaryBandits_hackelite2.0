@@ -14,10 +14,12 @@ import {
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 // import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useTheme } from "@mui/material/styles";
 // import Link from "next/link";
 // import { usePathname } from "next/navigation";
 
 const UserMenu: React.FC = () => {
+  const theme = useTheme();
   // const { user, logout } = useAuth();
   // const pathname = usePathname();
   // const isHome = pathname === "/";
@@ -35,14 +37,17 @@ const UserMenu: React.FC = () => {
     setAnchorEl(null);
   };
 
-  // const handleLogout = async () => {
-  //   await logout();
-  //   handleCloseMenu();
-  // };
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    handleCloseMenu();
+    window.location.href = "/login";
+  };
 
   // if (!user) {
   //   return null;
   // }
+
+  const avatarGradient = `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`;
 
   return (
     <Stack direction="row" spacing={2} alignItems="center">
@@ -59,17 +64,17 @@ const UserMenu: React.FC = () => {
             sx={{
               width: 44,
               height: 44,
-              background:
-                "linear-gradient(135deg, #007BFF 0%, #6A0DAD 100%)",
+              background: avatarGradient,
               fontSize: "1.2rem",
               fontWeight: 700,
+              color: theme.palette.getContrastText(theme.palette.primary.main),
             }}
           >
             {/* {!user.avatar && <PersonOutlineIcon fontSize="small" />} */}
           </Avatar>
           <Typography
             variant="body1"
-            color="#737791"
+            color={theme.palette.text.secondary}
             fontFamily="'Poppins-Medium', Helvetica"
             fontWeight={500}
           >
@@ -111,7 +116,7 @@ const UserMenu: React.FC = () => {
         {/* <Link href={menuLinkHref} passHref legacyBehavior>
           <MenuItem component="a">
             <ListItemIcon>
-              <PersonOutlineIcon fontSize="small" sx={{ color: "#737791" }} />
+              <PersonOutlineIcon fontSize="small" sx={{ color: theme.palette.text.secondary }} />
             </ListItemIcon>
             <Typography variant="body2" color="text.primary">
               {menuLabel}
@@ -121,9 +126,21 @@ const UserMenu: React.FC = () => {
 
         <Divider sx={{ my: 1 }} />
 
-        <MenuItem sx={{ color: "primary.main" }}>
+        <MenuItem
+          sx={{
+            color: theme.palette.primary.main,
+            "&:hover": {
+              background: theme.palette.action.hover,
+              color: theme.palette.secondary.main,
+              "& .MuiListItemIcon-root": {
+                color: theme.palette.secondary.main,
+              },
+            },
+          }}
+          onClick={handleLogout}
+        >
           <ListItemIcon>
-            <LogoutIcon fontSize="small" sx={{ color: "primary.main" }} />
+            <LogoutIcon fontSize="small" sx={{ color: theme.palette.primary.main }} />
           </ListItemIcon>
           <Typography variant="body2">Log out</Typography>
         </MenuItem>

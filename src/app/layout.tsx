@@ -9,6 +9,7 @@ import { NextAppProvider } from "@toolpad/core/nextjs";
 import NAVIGATION from "./_utils/navigation";
 import theme from "../theme";
 import { Suspense } from "react";
+import Loading from "./loading";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -35,9 +36,10 @@ export default function RootLayout({
         suppressHydrationWarning
       >
           <AppRouterCacheProvider>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Loading />}>
               <NextAppProvider navigation={NAVIGATION} theme={theme}>
                 {children}
+                
             </NextAppProvider>
             </Suspense>
           </AppRouterCacheProvider>
