@@ -47,11 +47,13 @@ const StatItem: React.FC<StatItemProps> = ({
         borderRadius: 3,
         backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.03),
         backdropFilter: "blur(8px)",
-        border: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.12)}`,
+        border: (theme) =>
+          `1px solid ${alpha(theme.palette.primary.main, 0.12)}`,
         transition: "all 0.3s ease",
         "&:hover": {
           transform: "translateY(-5px)",
-          boxShadow: (theme) => `0 10px 30px ${alpha(theme.palette.primary.main, 0.18)}`,
+          boxShadow: (theme) =>
+            `0 10px 30px ${alpha(theme.palette.primary.main, 0.18)}`,
           backgroundColor: (theme) => alpha(theme.palette.secondary.main, 0.04),
         },
       }}
@@ -88,7 +90,9 @@ const StatItem: React.FC<StatItemProps> = ({
           duration={2.5}
           separator=","
           decimals={
-            Number.isInteger(number) ? 0 : String(number).split(".")[1]?.length ?? 1
+            Number.isInteger(number)
+              ? 0
+              : (String(number).split(".")[1]?.length ?? 1)
           }
           enableScrollSpy
           scrollSpyOnce
@@ -114,7 +118,9 @@ export default function Stats() {
   const theme = useTheme();
   const { t } = useI18n();
   const gradient = `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`;
-  const iconContrast = theme.palette.getContrastText(theme.palette.primary.main);
+  const iconContrast = theme.palette.getContrastText(
+    theme.palette.primary.main
+  );
 
   useEffect(() => {
     if (!statsRef.current) return;
@@ -189,8 +195,6 @@ export default function Stats() {
         overflow: "hidden",
       }}
     >
-    
-
       <Box sx={{ position: "relative", zIndex: 1 }}>
         {/* Section Header */}
         <Box sx={{ textAlign: "center", mb: 6 }}>

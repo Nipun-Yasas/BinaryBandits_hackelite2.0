@@ -79,6 +79,9 @@ export default function CallToAction() {
         position: "relative",
         py: 2,
         mb: { xs: 0, md: 5 },
+        maxWidth: "100vw",
+        overflow: "hidden",
+        boxSizing: "border-box",
       }}
     >
       {/* Left: Text */}
@@ -89,6 +92,8 @@ export default function CallToAction() {
           position: "relative",
           zIndex: 2,
           p: { xs: 2, md: 8 },
+          maxWidth: "100vw", // Prevent overflow
+          boxSizing: "border-box",
         }}
       >
         <Typography
@@ -154,12 +159,14 @@ export default function CallToAction() {
       <Box
         sx={{
           width: { xs: "100%", md: "50%" },
+          maxWidth: "100vw", // Prevent overflow
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           position: "relative",
           zIndex: 1,
           mt: { xs: 4, md: 0 },
+          overflow: "hidden", // Prevent overflow
         }}
       >
         <Image
@@ -167,6 +174,13 @@ export default function CallToAction() {
           alt={t("callToAction.imgAlt")}
           width={500}
           height={400}
+          style={{
+            width: "100%",
+            height: "auto",
+            maxWidth: "100%",
+            maxHeight: "100%",
+            display: "block",
+          }}
         />
       </Box>
     </Box>

@@ -27,6 +27,9 @@ import { styled } from '@mui/material/styles';
 import { Quantum } from "ldrs/react";
 import "ldrs/react/Quantum.css";
 
+import { useLocale } from "../../_providers/LocaleContext";
+import { useI18n } from "../../_providers/I18nProvider";
+
 const ChatContainer = styled(Box)(({ theme }) => ({
   height: '400px',
   overflowY: 'auto',
@@ -66,10 +69,12 @@ interface ChatbotModalProps {
 }
 
 const ChatbotModal: React.FC<ChatbotModalProps> = ({ open, onClose }) => {
+  const { t } = useI18n();
+  
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Hello! I\'m your SkillForge Assistant. I can help you explore and navigate the platform. You can ask me about finding mentors, exchanging skills, using credits, or joining discussion forums to grow your learning journey.',
+      text: t('chatbot.message'),
       isUser: false,
       timestamp: new Date(),
     }
@@ -190,7 +195,7 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ open, onClose }) => {
       <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <BotIcon color="primary" />
-          <Typography variant="h6">SkillForge Assistant</Typography>
+          <Typography variant="h6">{t("chatbot.title")}</Typography>
         </Box>
         <IconButton onClick={onClose} size="small">
           <CloseIcon />
@@ -222,7 +227,7 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ open, onClose }) => {
               <MessageBubble isUser={false}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Quantum size="45" speed="1.75" color="#5AA9F9" />
-                  <Typography variant="body2">Analyzing claim...</Typography>
+                  <Typography variant="body2">{t("chatbot.loading")}</Typography>
                 </Box>
               </MessageBubble>
             </MessageContainer>
@@ -266,7 +271,7 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ open, onClose }) => {
             fullWidth
             multiline
             maxRows={3}
-            placeholder="Ask about insurance claims, upload documents, or describe your claim..."
+            placeholder={t("chatbot.textareaPlaceholder")}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
@@ -282,7 +287,7 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ open, onClose }) => {
             endIcon={<SendIcon />}
             sx={{ minWidth: 'auto' }}
           >
-            Send
+            {t("chatbot.button")}
           </Button>
         </Box>
       </DialogActions>

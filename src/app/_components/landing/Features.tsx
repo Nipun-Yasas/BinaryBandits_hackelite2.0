@@ -11,7 +11,9 @@ import { useI18n } from "../../_providers/I18nProvider";
 gsap.registerPlugin(ScrollTrigger);
 
 function get(obj: Dict, path: string, fallback?: any) {
-  return path.split(".").reduce((acc, key) => acc?.[key], obj) ?? fallback ?? path;
+  return (
+    path.split(".").reduce((acc, key) => acc?.[key], obj) ?? fallback ?? path
+  );
 }
 
 export default function Features() {
