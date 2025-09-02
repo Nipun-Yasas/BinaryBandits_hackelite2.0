@@ -16,7 +16,6 @@ export default function CustomAppTitle() {
         justifyContent: 'space-between',
         width: '100%', 
         px: 2,
-        gap:5 
       }}
     >
      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

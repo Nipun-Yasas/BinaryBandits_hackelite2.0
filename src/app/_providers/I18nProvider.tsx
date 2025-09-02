@@ -85,7 +85,8 @@ const messages: Record<"enUS" | "siLK", Dict> = {
         {
           icon: "https://unpkg.com/lucide-static@latest/icons/brain-circuit.svg",
           title: "Career Assessment Quiz",
-          description: "Interactive, interest‑based quiz mapping you to suitable career clusters.",
+          description:
+            "Interactive, interest‑based quiz mapping you to suitable career clusters.",
         },
         {
           icon: "https://unpkg.com/lucide-static@latest/icons/stars.svg",
@@ -95,18 +96,21 @@ const messages: Record<"enUS" | "siLK", Dict> = {
         {
           icon: "https://unpkg.com/lucide-static@latest/icons/route.svg",
           title: "Learning Paths",
-          description: "Step‑by‑step guidance: A/L subjects, degrees, diplomas, and vocational routes in Sri Lanka.",
+          description:
+            "Step‑by‑step guidance: A/L subjects, degrees, diplomas, and vocational routes in Sri Lanka.",
         },
         {
           icon: "https://unpkg.com/lucide-static@latest/icons/bot.svg",
           title: "AI Career Chatbot",
-          description: "Ask in Sinhala or English about subjects, pathways, and in‑demand jobs in Sri Lanka.",
+          description:
+            "Ask in Sinhala or English about subjects, pathways, and in‑demand jobs in Sri Lanka.",
         },
       ],
     },
     callToAction: {
       title: "Start your Path with PathFinder",
-      subtitle: "Take the career quiz, explore options, and follow learning paths tailored to Sri Lanka.",
+      subtitle:
+        "Take the career quiz, explore options, and follow learning paths tailored to Sri Lanka.",
       body: "Get personalized career suggestions, A/L subject guidance, and bilingual support (සිංහල / English). Download your report, ask our AI chatbot, and engage with a supportive community.",
       quizBtn: "Start Career Quiz",
       careersBtn: "Explore Careers",
@@ -133,6 +137,14 @@ const messages: Record<"enUS" | "siLK", Dict> = {
       privacyShort: "Privacy",
       termsShort: "Terms",
       contactShort: "Contact",
+    },
+    chatbot: {
+      title: "PathFinder Assistant",
+      message:
+        "Hello! I'm your PathFinder Assistant. I can help you explore and navigate the platform. You can ask me about anything.",
+      loading: "Generating reply...",
+      textareaPlaceholder: "Ask about anything.",
+      button:'send'
     },
   },
   siLK: {
@@ -214,7 +226,8 @@ const messages: Record<"enUS" | "siLK", Dict> = {
         {
           icon: "https://unpkg.com/lucide-static@latest/icons/brain-circuit.svg",
           title: "කාර්ය මාර්ග ඇසුරුම් ප්‍රශ්නාවලිය",
-          description: "රුචිකත්වයන් මත පදනම් වූ අන්තර්ක්‍රියාත්මක ප්‍රශ්නාවලිය.",
+          description:
+            "රුචිකත්වයන් මත පදනම් වූ අන්තර්ක්‍රියාත්මක ප්‍රශ්නාවලිය.",
         },
         {
           icon: "https://unpkg.com/lucide-static@latest/icons/stars.svg",
@@ -224,18 +237,21 @@ const messages: Record<"enUS" | "siLK", Dict> = {
         {
           icon: "https://unpkg.com/lucide-static@latest/icons/route.svg",
           title: "ඉගෙනුම් මාර්ග",
-          description: "පියවරෙන් පියවර මාර්ගෝපදේශනය: A/L විෂයයන්, උපාධි, ඩිප්ලෝමා සහ වෘත්තීය මාර්ග.",
+          description:
+            "පියවරෙන් පියවර මාර්ගෝපදේශනය: A/L විෂයයන්, උපාධි, ඩිප්ලෝමා සහ වෘත්තීය මාර්ග.",
         },
         {
           icon: "https://unpkg.com/lucide-static@latest/icons/bot.svg",
           title: "AI කාර්ය මාර්ග චැට්බොට්",
-          description: "විෂයයන්, මාර්ග සහ ඉල්ලුම් රැකියා ගැන සිංහල හෝ ඉංග්‍රීසි භාෂාවෙන් අසන්න.",
+          description:
+            "විෂයයන්, මාර්ග සහ ඉල්ලුම් රැකියා ගැන සිංහල හෝ ඉංග්‍රීසි භාෂාවෙන් අසන්න.",
         },
       ],
     },
     callToAction: {
       title: "PathFinder සමඟ ඔබේ මාර්ගය ආරම්භ කරන්න",
-      subtitle: "කාර්ය මාර්ග ප්‍රශ්නාවලිය අරඹන්න, විකල්ප සොයන්න, ශ්‍රී ලංකාවට අදාළ ඉගෙනුම් මාර්ග අනුගමනය කරන්න.",
+      subtitle:
+        "කාර්ය මාර්ග ප්‍රශ්නාවලිය අරඹන්න, විකල්ප සොයන්න, ශ්‍රී ලංකාවට අදාළ ඉගෙනුම් මාර්ග අනුගමනය කරන්න.",
       body: "පුද්ගලික රැකියා නිර්දේශ, A/L විෂය මාර්ගෝපදේශනය, දෙබසින් සහය (සිංහල / ඉංග්‍රීසි). ඔබේ වාර්තාව බාගන්න, AI චැට්බොට් අසන්න, සහය දක්වන ප්‍රජාවක් සමඟ සම්බන්ධ වන්න.",
       quizBtn: "කාර්ය මාර්ග ප්‍රශ්නාවලිය අරඹන්න",
       careersBtn: "රැකියා සොයන්න",
@@ -263,11 +279,22 @@ const messages: Record<"enUS" | "siLK", Dict> = {
       termsShort: "නියමයන්",
       contactShort: "සම්බන්ධ වන්න",
     },
+    chatbot: {
+      title: "PathFinder උදව්කරු",
+      message:
+        "ආයුබෝවන්! මම ඔබේ PathFinder උදව්කරු. මම ඔබට වේදිකාව සොයා බැලීමට සහ මාර්ගෝපදේශ ලබා ගැනීමට උදව් කළ හැකිය. ඔබට ඕනෑම දෙයක් ගැන මට අසන්න.",
+      loading: "පිළිතුර ජනනය වෙමින්...",
+      textareaPlaceholder: "ඕනෑම දෙයක් අසන්න.",
+      button: "යවන්න"
+    },
   },
 };
 
 function get(obj: Dict, path: string, fallback?: any) {
-  return path.split(".").reduce((acc, key) => (acc?.[key] ?? undefined), obj) ?? fallback;
+  return (
+    path.split(".").reduce((acc, key) => acc?.[key] ?? undefined, obj) ??
+    fallback
+  );
 }
 
 type I18nCtx = { t: (key: string, fallback?: any) => any };
@@ -276,7 +303,10 @@ const I18nContext = createContext<I18nCtx>({ t: (_k, fb) => fb });
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const { locale } = useLocale();
   const dict = messages[locale] ?? messages.enUS;
-  const value = useMemo<I18nCtx>(() => ({ t: (key, fb) => get(dict, key, fb) }), [dict]);
+  const value = useMemo<I18nCtx>(
+    () => ({ t: (key, fb) => get(dict, key, fb) }),
+    [dict]
+  );
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 

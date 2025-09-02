@@ -6,16 +6,13 @@ import UserMenu from './UserMenu';
 import Button from "@mui/material/Button";
 import LanguageIcon from "@mui/icons-material/Language";
 
-import MenuIcon from "@mui/icons-material/Menu";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
 import { useLocale } from "../../_providers/LocaleContext";
-import { useI18n } from "../../_providers/I18nProvider";
 
 export default function CustomToolbarActions() {
   const { locale, setLocale } = useLocale();
-  const { t } = useI18n();
   const label = locale === "siLK" ? "SI" : "EN";
 
   const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
@@ -30,7 +27,7 @@ export default function CustomToolbarActions() {
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Button
           variant="outlined"
           size="small"

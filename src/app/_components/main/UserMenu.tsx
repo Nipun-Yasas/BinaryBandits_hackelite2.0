@@ -62,8 +62,8 @@ const UserMenu: React.FC = () => {
             // src={user.avatar || undefined}
             // alt={user.name}
             sx={{
-              width: 44,
-              height: 44,
+              width: 40,
+              height: 40,
               background: avatarGradient,
               fontSize: "1.2rem",
               fontWeight: 700,
@@ -101,7 +101,7 @@ const UserMenu: React.FC = () => {
           sx: {
             overflow: "visible",
             filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.1))",
-            mt: 1.5,
+            
             width: 200,
             borderRadius: 2,
             "& .MuiMenuItem-root": {

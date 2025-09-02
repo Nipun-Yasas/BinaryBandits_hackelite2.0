@@ -31,7 +31,7 @@ const drawerWidth = 240;
 export default function Header() {
   const theme = useTheme();
   const { locale, setLocale } = useLocale();
-  const { t } = useI18n(); // <-- add
+  const { t } = useI18n();
   const label = locale === "siLK" ? "SI" : "EN";
 
   const gradient = `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`;
@@ -56,7 +56,8 @@ export default function Header() {
     handleUserMenuClose();
   };
 
-  const handleOpenLang = (e: React.MouseEvent<HTMLElement>) => setLangAnchor(e.currentTarget);
+  const handleOpenLang = (e: React.MouseEvent<HTMLElement>) =>
+    setLangAnchor(e.currentTarget);
   const handleCloseLang = () => setLangAnchor(null);
   const handleChoose = (value: "enUS" | "siLK") => {
     setLocale(value);
@@ -151,7 +152,10 @@ export default function Header() {
             sx={{
               borderColor: "primary.main",
               color: "primary.main",
-              "&:hover": { borderColor: "secondary.main", color: "secondary.main" },
+              "&:hover": {
+                borderColor: "secondary.main",
+                color: "secondary.main",
+              },
             }}
           >
             {label}

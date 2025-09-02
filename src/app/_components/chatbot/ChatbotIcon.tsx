@@ -38,8 +38,8 @@ interface ChatbotIconProps {
 
 const ChatbotIcon: React.FC<ChatbotIconProps> = ({ onClick }) => {
   return (
-    <Tooltip title="SkillForge Assistant" placement="top">
-      <StyledFab onClick={onClick} aria-label="Open SkillForge Assistant">
+    <Tooltip title="PathFinder Assistant" placement="top">
+      <StyledFab onClick={onClick} aria-label="Open PathFinder Assistant">
         <ChatIcon />
       </StyledFab>
     </Tooltip>
