@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+
 import Link from "next/link";
 import Image from "next/image";
 import Box from "@mui/material/Box";
@@ -31,10 +32,34 @@ export default function CallToAction() {
         end: "bottom 20%",
         toggleActions: "play reverse play reverse",
         animation: anim,
-        onEnter: () => gsap.to(element, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }),
-        onLeave: () => gsap.to(element, { opacity: 0, y: 100, duration: 1, ease: "power3.out" }),
-        onLeaveBack: () => gsap.to(element, { opacity: 0, y: -100, duration: 1, ease: "power3.out" }),
-        onEnterBack: () => gsap.to(element, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }),
+        onEnter: () =>
+          gsap.to(element, {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power3.out",
+          }),
+        onLeave: () =>
+          gsap.to(element, {
+            opacity: 0,
+            y: 100,
+            duration: 1,
+            ease: "power3.out",
+          }),
+        onLeaveBack: () =>
+          gsap.to(element, {
+            opacity: 0,
+            y: -100,
+            duration: 1,
+            ease: "power3.out",
+          }),
+        onEnterBack: () =>
+          gsap.to(element, {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power3.out",
+          }),
       });
     }, actionRef);
     return () => ctx.revert();
@@ -84,7 +109,14 @@ export default function CallToAction() {
         </Typography>
         <Typography variant="body1">{t("callToAction.body")}</Typography>
 
-        <Box sx={{ display: "flex", gap: 2, mt: 4, flexDirection: { xs: "column", sm: "row" } }}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            mt: 4,
+            flexDirection: { xs: "column", sm: "row" },
+          }}
+        >
           <Link href="/quiz" passHref>
             <Button
               variant="contained"
@@ -117,7 +149,6 @@ export default function CallToAction() {
             </Button>
           </Link>
         </Box>
-
       </Box>
 
       <Box
@@ -131,21 +162,11 @@ export default function CallToAction() {
           mt: { xs: 4, md: 0 },
         }}
       >
-        
-
         <Image
-          src="/student.png"
+          src="/action.svg"
           alt={t("callToAction.imgAlt")}
-          width={300}
-          height={300}
-          priority
-          style={{
-            position: "relative",
-            zIndex: 2,
-            height: "auto",
-            width: "100%",
-            maxWidth: "400px",
-          }}
+          width={500}
+          height={400}
         />
       </Box>
     </Box>

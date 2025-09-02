@@ -99,7 +99,7 @@ export default function Header() {
               transition: "color 0.3s ease",
             }}
           >
-            About
+            {t("nav.about")}
           </Typography>
         </Link>
 
@@ -111,7 +111,7 @@ export default function Header() {
               transition: "color 0.3s ease",
             }}
           >
-            Features
+            {t("nav.features")}
           </Typography>
         </Link>
 
@@ -128,7 +128,7 @@ export default function Header() {
             }}
           >
             <Users size={16} />
-            <span>Find Mentors</span>
+            {t("nav.findMentors")}
           </Typography>
         </Link>
         {/* {user && (
@@ -190,7 +190,7 @@ export default function Header() {
                 },
               }}
             >
-              Login
+              {t("nav.login")}
             </Button>
           </Link>
 
@@ -207,7 +207,7 @@ export default function Header() {
                 transition: "all 0.3s ease",
               }}
             >
-              Sign Up
+              {t("nav.signup")}
             </Button>
           </Link>
         </>

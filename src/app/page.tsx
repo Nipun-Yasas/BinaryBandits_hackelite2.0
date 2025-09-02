@@ -40,7 +40,7 @@ export default function Home() {
   //         display: 'flex',
   //         justifyContent: 'center',
   //         alignItems: 'center',
-  //         height: '100vh',
+  //         height: '100vh',z
   //         flexDirection: 'column',
   //         gap: 2,
   //         backgroundColor: '#f8f9fa',
@@ -66,7 +66,7 @@ export default function Home() {
   // }
 
   return (
-    <>
+    <Box sx={{ width: '100%', height: '100%' }}>
       <Header />
       <Hero />
       <Stats />
@@ -75,6 +75,6 @@ export default function Home() {
       <Testimonials />
       <CallToAction />
       <Footer />
-    </>
+    </Box>
   );
 }

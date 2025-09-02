@@ -189,33 +189,7 @@ export default function Stats() {
         overflow: "hidden",
       }}
     >
-      {/* Background decoration */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: -50,
-          right: -50,
-          width: 200,
-          height: 200,
-          background: gradient,
-          borderRadius: "50%",
-          opacity: 0.06,
-          zIndex: 0,
-        }}
-      />
-      <Box
-        sx={{
-          position: "absolute",
-          bottom: -30,
-          left: -30,
-          width: 150,
-          height: 150,
-          background: `linear-gradient(135deg, ${theme.palette.warning.main} 0%, ${theme.palette.secondary.main} 100%)`,
-          borderRadius: "50%",
-          opacity: 0.06,
-          zIndex: 0,
-        }}
-      />
+    
 
       <Box sx={{ position: "relative", zIndex: 1 }}>
         {/* Section Header */}

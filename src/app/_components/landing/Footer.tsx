@@ -61,6 +61,7 @@ export default function Footer() {
       role="contentinfo"
       sx={{
         mt: { xs: 2, md: 2 },
+        width: "100%",
         color: contrast,
         background: `linear-gradient(135deg, ${bgLeft} 0%, ${bgRight} 100%)`,
         borderTop: `1px solid ${alpha(contrast, 0.12)}`,
