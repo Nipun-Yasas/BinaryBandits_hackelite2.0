@@ -1,81 +1,42 @@
 import { useEffect, useRef } from "react";
-
 import Link from "next/link";
 import Image from "next/image";
-
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
-import { motion } from "framer-motion";
-
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useI18n } from "../../_providers/I18nProvider";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function CallToAction() {
   const actionRef = useRef(null);
   const theme = useTheme();
+  const { t } = useI18n();
 
   useEffect(() => {
     if (!actionRef.current) return;
-
     const ctx = gsap.context(() => {
       const element = actionRef.current;
-
       const anim = gsap.fromTo(
         element,
         { opacity: 0, y: 100 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power3.out",
-        }
+        { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
       );
-
       ScrollTrigger.create({
         trigger: element,
         start: "top 80%",
         end: "bottom 20%",
         toggleActions: "play reverse play reverse",
         animation: anim,
-        onEnter: () => {
-          gsap.to(element, {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: "power3.out",
-          });
-        },
-        onLeave: () => {
-          gsap.to(element, {
-            opacity: 0,
-            y: 100,
-            duration: 1,
-            ease: "power3.out",
-          });
-        },
-        onLeaveBack: () => {
-          gsap.to(element, {
-            opacity: 0,
-            y: -100,
-            duration: 1,
-            ease: "power3.out",
-          });
-        },
-        onEnterBack: () => {
-          gsap.to(element, {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: "power3.out",
-          });
-        },
+        onEnter: () => gsap.to(element, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }),
+        onLeave: () => gsap.to(element, { opacity: 0, y: 100, duration: 1, ease: "power3.out" }),
+        onLeaveBack: () => gsap.to(element, { opacity: 0, y: -100, duration: 1, ease: "power3.out" }),
+        onEnterBack: () => gsap.to(element, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }),
       });
     }, actionRef);
-
     return () => ctx.revert();
   }, []);
 
@@ -115,17 +76,13 @@ export default function CallToAction() {
             mb: { xs: 3.5, md: 3.5 },
           }}
         >
-          Start your Path with PathFinder
+          {t("callToAction.title")}
         </Typography>
 
         <Typography variant="h6" sx={{ display: "block", mb: 2 }}>
-          Take the career quiz, explore options, and follow learning paths tailored to Sri Lanka.
+          {t("callToAction.subtitle")}
         </Typography>
-        <Typography variant="body1">
-          Get personalized career suggestions, A/L subject guidance, and bilingual support
-          (සිංහල / English). Download your report, ask our AI chatbot, and engage with a
-          supportive community.
-        </Typography>
+        <Typography variant="body1">{t("callToAction.body")}</Typography>
 
         <Box sx={{ display: "flex", gap: 2, mt: 4, flexDirection: { xs: "column", sm: "row" } }}>
           <Link href="/quiz" passHref>
@@ -136,9 +93,9 @@ export default function CallToAction() {
                 background: gradient,
                 "&:hover": { filter: "brightness(0.95)" },
               }}
-              aria-label="Start Career Quiz"
+              aria-label={t("callToAction.quizBtn")}
             >
-              Start Career Quiz
+              {t("callToAction.quizBtn")}
             </Button>
           </Link>
           <Link href="/careers" passHref>
@@ -154,19 +111,15 @@ export default function CallToAction() {
                   backgroundColor: "rgba(0,0,0,0.02)",
                 },
               }}
-              aria-label="Explore Careers"
+              aria-label={t("callToAction.careersBtn")}
             >
-              Explore Careers
+              {t("callToAction.careersBtn")}
             </Button>
           </Link>
         </Box>
 
-        <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 2 }}>
-          Sinhala/English available. Tamil coming soon.
-        </Typography>
       </Box>
 
-      {/* Right: Illustration */}
       <Box
         sx={{
           width: { xs: "100%", md: "50%" },
@@ -178,32 +131,11 @@ export default function CallToAction() {
           mt: { xs: 4, md: 0 },
         }}
       >
-        <Box
-          component={motion.div}
-          animate={{ y: [0, -18, 0], rotate: [0, 4, 0] }}
-          transition={{
-            y: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
-            rotate: { duration: 30, repeat: Infinity, ease: "linear" },
-          }}
-          sx={{
-            position: "absolute",
-            width: { xs: 300, md: 350 },
-            left: { xs: "10%", md: "20%" },
-            top: "20%",
-            backgroundColor: theme.palette.secondary.light,
-            borderRadius: "70% 10% 80% 20% / 20% 10% 90% 100%",
-            height: { xs: 450, md: 450 },
-            transform: "translate(-50%, -50%)",
-            zIndex: 1,
-            opacity: 0.6,
-            willChange: "transform",
-          }}
-          aria-hidden="true"
-        />
+        
 
         <Image
           src="/student.png"
-          alt="Students discovering careers with PathFinder"
+          alt={t("callToAction.imgAlt")}
           width={300}
           height={300}
           priority

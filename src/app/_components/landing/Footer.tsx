@@ -16,12 +16,14 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useI18n } from "../../_providers/I18nProvider";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Footer() {
   const theme = useTheme();
   const footerRef = useRef<HTMLDivElement | null>(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     if (!footerRef.current) return;
@@ -69,20 +71,20 @@ export default function Footer() {
           {/* Brand + Contact */}
           <Grid size={{ xs: 12, md: 4 }}>
             <Typography variant="h5" fontWeight={800} sx={{ mb: 1 }}>
-              PathFinder
+              {t("footer.brand")}
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.9, mb: 3 }}>
-              Career guidance for Sri Lankan students.
+              {t("footer.tagline")}
             </Typography>
 
             <Typography variant="h6" sx={{ mb: 1 }}>
-              Contact
+              {t("footer.contact")}
             </Typography>
             <Box
               component="address"
               sx={{ fontStyle: "normal", opacity: 0.95 }}
             >
-              <Typography variant="body2">Colombo, Sri Lanka</Typography>
+              <Typography variant="body2">{t("footer.address")}</Typography>
               <MuiLink
                 component={NextLink}
                 href="mailto:support@pathfinder.lk"
@@ -145,7 +147,7 @@ export default function Footer() {
           {/* Product */}
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <Typography variant="h6" sx={{ mb: 2 }}>
-              Product
+              {t("footer.product")}
             </Typography>
             <Box component="nav" aria-label="Product">
               <Box
@@ -166,7 +168,7 @@ export default function Footer() {
                     underline="hover"
                     variant="body2"
                   >
-                    About PathFinder
+                    {t("footer.about")}
                   </MuiLink>
                 </Box>
                 <Box component="li">
@@ -177,7 +179,7 @@ export default function Footer() {
                     underline="hover"
                     variant="body2"
                   >
-                    Career Quiz
+                    {t("footer.quiz")}
                   </MuiLink>
                 </Box>
                 <Box component="li">
@@ -188,7 +190,7 @@ export default function Footer() {
                     underline="hover"
                     variant="body2"
                   >
-                    Career Explorer
+                    {t("footer.explorer")}
                   </MuiLink>
                 </Box>
                 <Box component="li">
@@ -199,7 +201,7 @@ export default function Footer() {
                     underline="hover"
                     variant="body2"
                   >
-                    Learning Paths
+                    {t("footer.paths")}
                   </MuiLink>
                 </Box>
                 <Box component="li">
@@ -210,7 +212,7 @@ export default function Footer() {
                     underline="hover"
                     variant="body2"
                   >
-                    AI Chatbot
+                    {t("footer.chatbot")}
                   </MuiLink>
                 </Box>
                 <Box component="li">
@@ -221,7 +223,7 @@ export default function Footer() {
                     underline="hover"
                     variant="body2"
                   >
-                    Community Forum
+                    {t("footer.forum")}
                   </MuiLink>
                 </Box>
               </Box>
@@ -231,7 +233,7 @@ export default function Footer() {
           {/* Support */}
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <Typography variant="h6" sx={{ mb: 2 }}>
-              Support
+              {t("footer.support")}
             </Typography>
             <Box component="nav" aria-label="Support">
               <Box
@@ -252,7 +254,7 @@ export default function Footer() {
                     underline="hover"
                     variant="body2"
                   >
-                    Help Center
+                    {t("footer.help")}
                   </MuiLink>
                 </Box>
                 <Box component="li">
@@ -263,7 +265,7 @@ export default function Footer() {
                     underline="hover"
                     variant="body2"
                   >
-                    Privacy Policy
+                    {t("footer.privacy")}
                   </MuiLink>
                 </Box>
                 <Box component="li">
@@ -274,7 +276,7 @@ export default function Footer() {
                     underline="hover"
                     variant="body2"
                   >
-                    Terms of Service
+                    {t("footer.terms")}
                   </MuiLink>
                 </Box>
                 <Box component="li">
@@ -285,7 +287,7 @@ export default function Footer() {
                     underline="hover"
                     variant="body2"
                   >
-                    Sinhala / English
+                    {t("footer.language")}
                   </MuiLink>
                 </Box>
               </Box>
@@ -307,7 +309,8 @@ export default function Footer() {
           }}
         >
           <Typography variant="body2" sx={{ opacity: 0.9 }}>
-            © {new Date().getFullYear()} PathFinder. All rights reserved.
+            © {new Date().getFullYear()} {t("footer.brand")}.{" "}
+            {t("footer.copyright")}
           </Typography>
           <Box sx={{ display: "flex", gap: 2 }}>
             <MuiLink
@@ -317,7 +320,7 @@ export default function Footer() {
               underline="hover"
               variant="body2"
             >
-              Privacy
+              {t("footer.privacyShort")}
             </MuiLink>
             <MuiLink
               component={NextLink}
@@ -326,7 +329,7 @@ export default function Footer() {
               underline="hover"
               variant="body2"
             >
-              Terms
+              {t("footer.termsShort")}
             </MuiLink>
             <MuiLink
               component={NextLink}
@@ -335,7 +338,7 @@ export default function Footer() {
               underline="hover"
               variant="body2"
             >
-              Contact
+              {t("footer.contactShort")}
             </MuiLink>
           </Box>
         </Box>

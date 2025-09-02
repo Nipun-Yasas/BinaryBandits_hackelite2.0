@@ -2,16 +2,26 @@ import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-
+import { useTheme } from "@mui/material/styles";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 type Feature = {
   icon: string;
   title: string;
   description: string;
+  viewDetails?: string;
 };
 
-const FeatureCard: React.FC<Feature> = ({ icon, title, description }) => {
+const FeatureCard: React.FC<Feature> = ({
+  icon,
+  title,
+  description,
+  viewDetails,
+}) => {
+  const theme = useTheme();
+  const gradient = `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`;
+  const gradientHover = `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`;
+
   return (
     <Card
       className="feature-card"
@@ -53,9 +63,9 @@ const FeatureCard: React.FC<Feature> = ({ icon, title, description }) => {
       <Button
         variant="contained"
         sx={{
-          background: "linear-gradient(135deg, #007BFF 0%, #6A0DAD 100%)",
+          background: gradient,
           "&:hover": {
-            background: "linear-gradient(135deg, #0056CC 0%, #4A0080 100%)",
+            background: gradientHover,
           },
           px: 2,
           py: 1.5,
@@ -64,7 +74,7 @@ const FeatureCard: React.FC<Feature> = ({ icon, title, description }) => {
         }}
         endIcon={<ArrowForwardIcon />}
       >
-        View Details
+        {viewDetails}
       </Button>
     </Card>
   );

@@ -1,17 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTheme, alpha } from "@mui/material/styles";
-
 import CountUp from "react-countup";
-
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { BookOpen, FileText, Star, Users } from "lucide-react";
+import { useI18n } from "../../_providers/I18nProvider";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -114,6 +112,7 @@ const StatItem: React.FC<StatItemProps> = ({
 export default function Stats() {
   const statsRef = useRef(null);
   const theme = useTheme();
+  const { t } = useI18n();
   const gradient = `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`;
   const iconContrast = theme.palette.getContrastText(theme.palette.primary.main);
 
@@ -184,7 +183,6 @@ export default function Stats() {
       width="100%"
       id="stats"
       sx={{
-        backgroundColor: theme.palette.background.default,
         px: { xs: 2, md: 4 },
         py: { xs: 6, md: 8 },
         position: "relative",
@@ -234,15 +232,14 @@ export default function Stats() {
               mb: 1.5,
             }}
           >
-            Guiding Futures, At Scale
+            {t("stats.title")}
           </Typography>
           <Typography
             variant="h6"
             color="text.secondary"
             sx={{ maxWidth: 700, mx: "auto" }}
           >
-            Join thousands using PathFinder to discover careers, explore study
-            routes, and make informed decisions.
+            {t("stats.subtitle")}
           </Typography>
         </Box>
 
@@ -263,22 +260,22 @@ export default function Stats() {
           <StatItem
             icon={<Users size={32} color={iconContrast} />}
             number={studentsGuided}
-            text="Students Guided"
+            text={t("stats.studentsGuided")}
           />
           <StatItem
             icon={<BookOpen size={32} color={iconContrast} />}
             number={careersExplored}
-            text="Careers Explored"
+            text={t("stats.careersExplored")}
           />
           <StatItem
             icon={<FileText size={32} color={iconContrast} />}
             number={reportsGenerated}
-            text="Reports Generated"
+            text={t("stats.reportsGenerated")}
           />
           <StatItem
             icon={<Star size={32} color={iconContrast} />}
             number={averageRating}
-            text="Satisfaction Rating"
+            text={t("stats.satisfactionRating")}
             suffix="★"
           />
         </Box>

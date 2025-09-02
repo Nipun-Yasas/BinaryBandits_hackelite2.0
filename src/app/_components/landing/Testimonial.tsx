@@ -152,8 +152,8 @@ const Testimonials: React.FC = () => {
 
         <BackgroundShape
           className="shape1"
-          color="#00B4D8"
-          opacity={0.16}
+          color={theme.palette.primary.main}
+          opacity={0.1}
           width={240}
           height={234}
           cx={120}
@@ -161,17 +161,7 @@ const Testimonials: React.FC = () => {
           rx={120}
           ry={117}
         />
-        <BackgroundShape
-          className="shape2"
-          color="#0077B6"
-          opacity={0.05}
-          width={192}
-          height={197}
-          cx={96}
-          cy={98.5}
-          rx={96}
-          ry={98.5}
-        />
+        
       </Box>
     </Box>
   );

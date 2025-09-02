@@ -2,14 +2,16 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { alpha, useTheme } from "@mui/material/styles";
 import CountUp from "react-countup";
+import React from "react";
 
 interface StatItemProps {
-  icon: string;
+  icon: React.ReactNode; // Accepts a ReactNode for SVG/icon
   number: number;
   text: string;
+  suffix?: string;
 }
 
-const StatItem: React.FC<StatItemProps> = ({ icon, number, text }) => {
+const StatItem: React.FC<StatItemProps> = ({ icon, number, text, suffix = "+" }) => {
   const theme = useTheme();
 
   return (
@@ -40,17 +42,7 @@ const StatItem: React.FC<StatItemProps> = ({ icon, number, text }) => {
           boxShadow: `0 6px 18px ${alpha(theme.palette.primary.main, 0.12)}`,
         }}
       >
-        <Box
-          component="img"
-          src={icon}
-          alt="Stat icon"
-          sx={{
-            width: { xs: 28, md: 36 },
-            height: { xs: 28, md: 36 },
-            objectFit: "contain",
-            display: "block",
-          }}
-        />
+        {icon}
       </Box>
 
       <Typography
@@ -62,7 +54,8 @@ const StatItem: React.FC<StatItemProps> = ({ icon, number, text }) => {
           lineHeight: 1.1,
         }}
       >
-        <CountUp end={number} duration={2} separator="," />+
+        <CountUp end={number} duration={2} separator="," />
+        {suffix}
       </Typography>
 
       <Typography
@@ -80,3 +73,4 @@ const StatItem: React.FC<StatItemProps> = ({ icon, number, text }) => {
 };
 
 export default StatItem;
+

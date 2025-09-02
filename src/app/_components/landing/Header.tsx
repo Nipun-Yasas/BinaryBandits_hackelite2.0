@@ -17,21 +17,31 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import LanguageIcon from "@mui/icons-material/Language";
 
 import MenuIcon from "@mui/icons-material/Menu";
 
-import UserMenu from "../main/UserMenu";
+import { useLocale } from "../../_providers/LocaleContext";
+import { useI18n } from "../../_providers/I18nProvider";
 
 const drawerWidth = 240;
 
 export default function Header() {
   const theme = useTheme();
+  const { locale, setLocale } = useLocale();
+  const { t } = useI18n(); // <-- add
+  const label = locale === "siLK" ? "SI" : "EN";
+
   const gradient = `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`;
   const gradientHover = `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`;
 
   const [mobileOpen, setMobileOpen] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
+  const openLang = Boolean(langAnchor);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -44,6 +54,13 @@ export default function Header() {
   const handleLogout = async () => {
     // await logout();
     handleUserMenuClose();
+  };
+
+  const handleOpenLang = (e: React.MouseEvent<HTMLElement>) => setLangAnchor(e.currentTarget);
+  const handleCloseLang = () => setLangAnchor(null);
+  const handleChoose = (value: "enUS" | "siLK") => {
+    setLocale(value);
+    handleCloseLang();
   };
 
   const drawer = (
@@ -119,6 +136,27 @@ export default function Header() {
             <Link href="/dashboard">Dashboard</Link>
           </Typography>
         )} */}
+      </Box>
+      <Divider />
+      <Box sx={{ py: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<LanguageIcon />}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOpenLang(e as any);
+            }}
+            sx={{
+              borderColor: "primary.main",
+              color: "primary.main",
+              "&:hover": { borderColor: "secondary.main", color: "secondary.main" },
+            }}
+          >
+            {label}
+          </Button>
+        </Box>
       </Box>
 
       {/* Mobile Auth Buttons */}
@@ -271,26 +309,14 @@ export default function Header() {
             }}
           >
             <Link href="#about" style={{ textDecoration: "none" }}>
-              <Typography
-                variant="body1"
-                sx={{
-                  color: "primary.main",
-                  transition: "color 0.3s ease",
-                }}
-              >
-                About
+              <Typography variant="body1" sx={{ color: "primary.main" }}>
+                {t("nav.about")}
               </Typography>
             </Link>
 
             <Link href="#features" style={{ textDecoration: "none" }}>
-              <Typography
-                variant="body1"
-                sx={{
-                  color: "primary.main",
-                  transition: "color 0.3s ease",
-                }}
-              >
-                Features
+              <Typography variant="body1" sx={{ color: "primary.main" }}>
+                {t("nav.features")}
               </Typography>
             </Link>
 
@@ -299,16 +325,32 @@ export default function Header() {
                 variant="body1"
                 sx={{
                   color: "primary.main",
-                  transition: "color 0.3s ease",
                   display: "flex",
                   alignItems: "center",
                   gap: 1,
                 }}
               >
                 <Users size={16} />
-                Find Mentors
+                {t("nav.findMentors")}
               </Typography>
             </Link>
+
+            {/* Language selector */}
+            <Button
+              variant="outlined"
+              startIcon={<LanguageIcon />}
+              onClick={handleOpenLang}
+              sx={{
+                borderColor: "primary.main",
+                color: "primary.main",
+                "&:hover": {
+                  borderColor: "secondary.main",
+                  color: "secondary.main",
+                },
+              }}
+            >
+              {label}
+            </Button>
 
             {/* Authentication Buttons */}
             {/* {user ? (
@@ -327,10 +369,9 @@ export default function Header() {
                     },
                   }}
                 >
-                  Login
+                  {t("nav.login")}
                 </Button>
               </Link>
-
               <Link href="/signup" passHref style={{ textDecoration: "none" }}>
                 <Button
                   variant="contained"
@@ -343,7 +384,7 @@ export default function Header() {
                     transition: "all 0.3s ease",
                   }}
                 >
-                  Sign Up
+                  {t("nav.signUp")}
                 </Button>
               </Link>
             </>
@@ -351,6 +392,13 @@ export default function Header() {
           </Box>
         </Toolbar>
       </AppBar>
+
+      {/* Language menu */}
+      <Menu anchorEl={langAnchor} open={openLang} onClose={handleCloseLang}>
+        <MenuItem onClick={() => handleChoose("enUS")}>English (EN)</MenuItem>
+        <MenuItem onClick={() => handleChoose("siLK")}>සිංහල (SI)</MenuItem>
+      </Menu>
+
       <nav>
         <Drawer
           variant="temporary"
