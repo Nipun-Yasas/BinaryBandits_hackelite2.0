@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 5, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Jehan/Desktop/react%20projects/BinaryBandits_hackelite2.0/src/app/%28main%29/loading.tsx"],"sourcesContent":["\"use client\";\r\n\r\nimport Box from \"@mui/material/Box\";\r\n\r\nimport { Quantum } from \"ldrs/react\";\r\nimport \"ldrs/react/Quantum.css\";\r\n\r\nexport default function Loading() {\r\n  return (\r\n    <Box\r\n      sx={{\r\n        display: \"flex\",\r\n        justifyContent: \"center\",\r\n        alignItems: \"center\",\r\n        height: \"100vh\",\r\n        flexDirection: \"column\",\r\n        gap: 2,\r\n        backgroundColor: \"#f8f9fa\",\r\n        padding: { xs: 2, sm: 3, md: 4 },\r\n      }}\r\n    >\r\n      <Quantum size=\"45\" speed=\"1.75\" color=\"#007BFF\" />\r\n    </Box>\r\n  );\r\n}\r\n"],"names":[],"mappings":";;;;AAEA;AAEA;AAJA;;;;;AAOe,SAAS;IACtB,qBACE,8OAAC,sJAAA,CAAA,UAAG;QACF,IAAI;YACF,SAAS;YACT,gBAAgB;YAChB,YAAY;YACZ,QAAQ;YACR,eAAe;YACf,KAAK;YACL,iBAAiB;YACjB,SAAS;gBAAE,IAAI;gBAAG,IAAI;gBAAG,IAAI;YAAE;QACjC;kBAEA,cAAA,8OAAC,sLAAA,CAAA,UAAO;YAAC,MAAK;YAAK,OAAM;YAAO,OAAM;;;;;;;;;;;AAG5C","debugId":null}}]
-}
