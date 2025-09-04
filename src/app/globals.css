@@ -42,12 +42,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #8073fa 0%, #cf72ed 100%);
+  background: linear-gradient(135deg, #0B1D51 0%, #725CAD 100%);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #8073fa 0%, #cf72ed 100%);
+  background: linear-gradient(135deg, #0B1D51 0%, #725CAD 100%);
 }
 
 a {

@@ -155,8 +155,6 @@ export default function Hero() {
               variant="outlined"
               size="large"
               sx={{
-                borderColor: theme.palette.primary.main,
-                color: theme.palette.primary.main,
                 px: 3.5,
                 py: 1.25,
                 borderRadius: 2,
