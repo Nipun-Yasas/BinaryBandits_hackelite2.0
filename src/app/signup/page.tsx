@@ -44,6 +44,7 @@ import {
 } from "lucide-react";
 
 import BackgroundShape from "../_components/background/BackgroundShape";
+import { signup } from "../lib/api";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -55,13 +56,14 @@ export default function SignupPage() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "learner" as "learner" | "mentor" | "both",
+    role: "user" as "user" | "admin",
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -77,7 +79,7 @@ export default function SignupPage() {
   const handleRoleChange = (value: string) => {
     setFormData((prev) => ({
       ...prev,
-      role: value as "learner" | "mentor" | "both",
+      role: value as "user" | "admin",
     }));
   };
 
@@ -100,8 +102,8 @@ export default function SignupPage() {
 
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
     }
 
     if (!formData.confirmPassword) {
@@ -120,24 +122,30 @@ export default function SignupPage() {
     if (!validateForm()) return;
 
     setIsLoading(true);
+    setErrors({});
+    setSuccess(false);
 
     try {
-      // Replace this with your actual signup API call
-      // const success = await signup({
-      //   name: formData.name.trim(),
-      //   email: formData.email.trim(),
-      //   password: formData.password,
-      //   role: formData.role,
-      // });
+      const response = await signup({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        role: formData.role,
+      });
 
-      // Simulate success for demo:
-      const success = true;
-
-      if (success) {
-        router.push("/login");
+      if (response.error) {
+        setErrors({ submit: response.error });
+      } else {
+        // Successful signup
+        setSuccess(true);
+        // Redirect to dashboard after showing success message
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 2000);
       }
     } catch (error) {
       console.error("Signup error:", error);
+      setErrors({ submit: "An unexpected error occurred. Please try again." });
     } finally {
       setIsLoading(false);
     }
@@ -561,7 +569,24 @@ export default function SignupPage() {
                       onChange={handleChange}
                       error={!!errors.name}
                       helperText={errors.name}
-                      sx={{ mb: 3 }}
+                      sx={{ 
+                        mb: 3,
+                        '& .MuiInputBase-input': {
+                          color: theme.palette.text.primary + ' !important',
+                          backgroundColor: 'transparent',
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: theme.palette.text.secondary,
+                        },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: theme.palette.divider,
+                          },
+                          '&:hover fieldset': {
+                            borderColor: theme.palette.primary.main,
+                          },
+                        },
+                      }}
                       disabled={isLoading}
                       InputProps={{
                         startAdornment: (
@@ -583,7 +608,29 @@ export default function SignupPage() {
                       onChange={handleChange}
                       error={!!errors.email}
                       helperText={errors.email}
-                      sx={{ mb: 3 }}
+                      sx={{ 
+                        mb: 3,
+                        '& .MuiInputBase-input': {
+                          color: theme.palette.text.primary,
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: theme.palette.text.secondary,
+                        },
+                        '& .MuiInputLabel-root.Mui-focused': {
+                          color: theme.palette.primary.main,
+                        },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: theme.palette.divider,
+                          },
+                          '&:hover fieldset': {
+                            borderColor: theme.palette.primary.main,
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: theme.palette.primary.main,
+                          },
+                        },
+                      }}
                       disabled={isLoading}
                       InputProps={{
                         startAdornment: (
@@ -596,11 +643,33 @@ export default function SignupPage() {
                   </motion.div>
 
                   <motion.div variants={itemVariants}>
-                    <FormControl fullWidth sx={{ mb: 3 }}>
-                      <InputLabel>I want to...</InputLabel>
+                    <FormControl fullWidth sx={{ 
+                      mb: 3,
+                      '& .MuiSelect-select': {
+                        color: theme.palette.text.primary,
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: theme.palette.text.secondary,
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: theme.palette.primary.main,
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: theme.palette.divider,
+                        },
+                        '&:hover fieldset': {
+                          borderColor: theme.palette.primary.main,
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: theme.palette.primary.main,
+                        },
+                      },
+                    }}>
+                      <InputLabel>Account Type</InputLabel>
                       <Select
                         value={formData.role}
-                        label="I want to..."
+                        label="Account Type"
                         onChange={(e) => handleRoleChange(e.target.value)}
                         disabled={isLoading}
                         startAdornment={
@@ -609,11 +678,8 @@ export default function SignupPage() {
                           </InputAdornment>
                         }
                       >
-                        <MenuItem value="learner">🎓 Learn new skills</MenuItem>
-                        <MenuItem value="mentor">👨‍🏫 Teach others</MenuItem>
-                        <MenuItem value="both">
-                          🚀 Both learn and teach
-                        </MenuItem>
+                        <MenuItem value="user">👤 Regular User</MenuItem>
+                        <MenuItem value="admin">⚡ Administrator</MenuItem>
                       </Select>
                     </FormControl>
                   </motion.div>
@@ -628,7 +694,29 @@ export default function SignupPage() {
                       onChange={handleChange}
                       error={!!errors.password}
                       helperText={errors.password}
-                      sx={{ mb: 3 }}
+                      sx={{ 
+                        mb: 3,
+                        '& .MuiInputBase-input': {
+                          color: theme.palette.text.primary,
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: theme.palette.text.secondary,
+                        },
+                        '& .MuiInputLabel-root.Mui-focused': {
+                          color: theme.palette.primary.main,
+                        },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: theme.palette.divider,
+                          },
+                          '&:hover fieldset': {
+                            borderColor: theme.palette.primary.main,
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: theme.palette.primary.main,
+                          },
+                        },
+                      }}
                       disabled={isLoading}
                       InputProps={{
                         startAdornment: (
@@ -641,11 +729,12 @@ export default function SignupPage() {
                             <IconButton
                               onClick={() => setShowPassword(!showPassword)}
                               edge="end"
+                              sx={{ color: theme.palette.text.secondary }}
                             >
                               {showPassword ? (
-                                <EyeOff size={20} />
+                                <EyeOff size={20} color={theme.palette.text.secondary} />
                               ) : (
-                                <Eye size={20} />
+                                <Eye size={20} color={theme.palette.text.secondary} />
                               )}
                             </IconButton>
                           </InputAdornment>
@@ -664,7 +753,29 @@ export default function SignupPage() {
                       onChange={handleChange}
                       error={!!errors.confirmPassword}
                       helperText={errors.confirmPassword}
-                      sx={{ mb: 4 }}
+                      sx={{ 
+                        mb: 4,
+                        '& .MuiInputBase-input': {
+                          color: theme.palette.text.primary,
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: theme.palette.text.secondary,
+                        },
+                        '& .MuiInputLabel-root.Mui-focused': {
+                          color: theme.palette.primary.main,
+                        },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: theme.palette.divider,
+                          },
+                          '&:hover fieldset': {
+                            borderColor: theme.palette.primary.main,
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: theme.palette.primary.main,
+                          },
+                        },
+                      }}
                       disabled={isLoading}
                       InputProps={{
                         startAdornment: (
@@ -679,11 +790,12 @@ export default function SignupPage() {
                                 setShowConfirmPassword(!showConfirmPassword)
                               }
                               edge="end"
+                              sx={{ color: theme.palette.text.secondary }}
                             >
                               {showConfirmPassword ? (
-                                <EyeOff size={20} />
+                                <EyeOff size={20} color={theme.palette.text.secondary} />
                               ) : (
-                                <Eye size={20} />
+                                <Eye size={20} color={theme.palette.text.secondary} />
                               )}
                             </IconButton>
                           </InputAdornment>
@@ -691,6 +803,89 @@ export default function SignupPage() {
                       }}
                     />
                   </motion.div>
+
+                  {/* Error Display */}
+                  {errors.submit && (
+                    <motion.div variants={itemVariants}>
+                      <Box
+                        sx={{
+                          mb: 3,
+                          p: 2,
+                          borderRadius: 2,
+                          backgroundColor: theme.palette.error.main + "15",
+                          border: `1px solid ${theme.palette.error.main}33`,
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          color="error"
+                          sx={{ fontWeight: 500 }}
+                        >
+                          {errors.submit}
+                        </Typography>
+                      </Box>
+                    </motion.div>
+                  )}
+
+                  {/* Success Display */}
+                  {success && (
+                    <motion.div 
+                      variants={itemVariants}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                    >
+                      <Box
+                        sx={{
+                          mb: 3,
+                          p: 2,
+                          borderRadius: 2,
+                          backgroundColor: theme.palette.success.main + "15",
+                          border: `1px solid ${theme.palette.success.main}33`,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 2,
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            width: 24,
+                            height: 24,
+                            borderRadius: "50%",
+                            backgroundColor: theme.palette.success.main,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography
+                            sx={{ 
+                              color: "white", 
+                              fontSize: "14px",
+                              fontWeight: "bold" 
+                            }}
+                          >
+                            ✓
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography
+                            variant="body2"
+                            color="success.main"
+                            sx={{ fontWeight: 600, mb: 0.5 }}
+                          >
+                            Account Created Successfully!
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            color="success.main"
+                            sx={{ opacity: 0.8 }}
+                          >
+                            Redirecting to dashboard...
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </motion.div>
+                  )}
 
                   <motion.div variants={itemVariants}>
                     <Button

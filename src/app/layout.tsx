@@ -11,6 +11,7 @@ import NAVIGATION from "./_utils/navigation";
 import theme from "../theme";
 import { LocaleProvider, useLocale } from "./_providers/LocaleContext";
 import { I18nProvider } from "./_providers/I18nProvider";
+import { AuthProvider } from "./_providers/AuthProvider";
 import { Poppins, Inter } from "next/font/google";
 import Loading from "./loading";
 
@@ -36,7 +37,9 @@ function AppThemeBridge({ children }: { children: React.ReactNode }) {
 
   return (
     <NextAppProvider navigation={NAVIGATION} theme={themedWithLocale}>
-      <I18nProvider>{children}</I18nProvider>
+      <AuthProvider>
+        <I18nProvider>{children}</I18nProvider>
+      </AuthProvider>
     </NextAppProvider>
   );
 }

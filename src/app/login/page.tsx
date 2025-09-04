@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 
 import BackgroundShape from "../_components/background/BackgroundShape";
+import { login } from "../lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -50,6 +51,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -85,15 +87,28 @@ export default function LoginPage() {
     if (!validateForm()) return;
 
     setIsLoading(true);
+    setErrors({});
+    setSuccess(false);
 
     try {
-      // const success = await login(formData.email.trim(), formData.password);
+      const response = await login({
+        email: formData.email.trim(),
+        password: formData.password,
+      });
 
-      // if (success) {
-      //   router.push("/dashboard");
-      // }
+      if (response.error) {
+        setErrors({ submit: response.error });
+      } else {
+        // Successful login
+        setSuccess(true);
+        // Redirect to dashboard after showing success message
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 1500);
+      }
     } catch (error) {
       console.error("Login error:", error);
+      setErrors({ submit: "An unexpected error occurred. Please try again." });
     } finally {
       setIsLoading(false);
     }
@@ -518,7 +533,29 @@ export default function LoginPage() {
                       onChange={handleChange}
                       error={!!errors.email}
                       helperText={errors.email}
-                      sx={{ mb: 3 }}
+                      sx={{ 
+                        mb: 3,
+                        '& .MuiInputBase-input': {
+                          color: theme.palette.text.primary,
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: theme.palette.text.secondary,
+                        },
+                        '& .MuiInputLabel-root.Mui-focused': {
+                          color: theme.palette.primary.main,
+                        },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: theme.palette.divider,
+                          },
+                          '&:hover fieldset': {
+                            borderColor: theme.palette.text.secondary,
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: theme.palette.primary.main,
+                          },
+                        },
+                      }}
                       disabled={isLoading}
                       InputProps={{
                         startAdornment: (
@@ -540,7 +577,29 @@ export default function LoginPage() {
                       onChange={handleChange}
                       error={!!errors.password}
                       helperText={errors.password}
-                      sx={{ mb: 4 }}
+                      sx={{ 
+                        mb: 4,
+                        '& .MuiInputBase-input': {
+                          color: theme.palette.text.primary,
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: theme.palette.text.secondary,
+                        },
+                        '& .MuiInputLabel-root.Mui-focused': {
+                          color: theme.palette.primary.main,
+                        },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: theme.palette.divider,
+                          },
+                          '&:hover fieldset': {
+                            borderColor: theme.palette.text.secondary,
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: theme.palette.primary.main,
+                          },
+                        },
+                      }}
                       disabled={isLoading}
                       InputProps={{
                         startAdornment: (
@@ -553,11 +612,12 @@ export default function LoginPage() {
                             <IconButton
                               onClick={() => setShowPassword(!showPassword)}
                               edge="end"
+                              sx={{ color: theme.palette.text.secondary }}
                             >
                               {showPassword ? (
-                                <EyeOff size={20} />
+                                <EyeOff size={20} color={theme.palette.text.secondary} />
                               ) : (
-                                <Eye size={20} />
+                                <Eye size={20} color={theme.palette.text.secondary} />
                               )}
                             </IconButton>
                           </InputAdornment>
@@ -565,6 +625,89 @@ export default function LoginPage() {
                       }}
                     />
                   </motion.div>
+
+                  {/* Error Display */}
+                  {errors.submit && (
+                    <motion.div variants={itemVariants}>
+                      <Box
+                        sx={{
+                          mb: 3,
+                          p: 2,
+                          borderRadius: 2,
+                          backgroundColor: theme.palette.error.main + "15",
+                          border: `1px solid ${theme.palette.error.main}33`,
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          color="error"
+                          sx={{ fontWeight: 500 }}
+                        >
+                          {errors.submit}
+                        </Typography>
+                      </Box>
+                    </motion.div>
+                  )}
+
+                  {/* Success Display */}
+                  {success && (
+                    <motion.div 
+                      variants={itemVariants}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                    >
+                      <Box
+                        sx={{
+                          mb: 3,
+                          p: 2,
+                          borderRadius: 2,
+                          backgroundColor: theme.palette.success.main + "15",
+                          border: `1px solid ${theme.palette.success.main}33`,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 2,
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            width: 24,
+                            height: 24,
+                            borderRadius: "50%",
+                            backgroundColor: theme.palette.success.main,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography
+                            sx={{ 
+                              color: "white", 
+                              fontSize: "14px",
+                              fontWeight: "bold" 
+                            }}
+                          >
+                            ✓
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography
+                            variant="body2"
+                            color="success.main"
+                            sx={{ fontWeight: 600, mb: 0.5 }}
+                          >
+                            Login Successful!
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            color="success.main"
+                            sx={{ opacity: 0.8 }}
+                          >
+                            Redirecting to dashboard...
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </motion.div>
+                  )}
 
                   <motion.div variants={itemVariants}>
                     <Button

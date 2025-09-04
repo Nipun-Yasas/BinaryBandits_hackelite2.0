@@ -17,10 +17,11 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useTheme } from "@mui/material/styles";
 // import Link from "next/link";
 // import { usePathname } from "next/navigation";
+import { useAuth } from "../../_providers/AuthProvider";
 
 const UserMenu: React.FC = () => {
   const theme = useTheme();
-  // const { user, logout } = useAuth();
+  const { user, logout } = useAuth();
   // const pathname = usePathname();
   // const isHome = pathname === "/";
   // const menuLinkHref = isHome ? "/dashboard" : "/profile";
