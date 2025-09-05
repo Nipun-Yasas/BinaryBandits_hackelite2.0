@@ -26,11 +26,14 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 import { useLocale } from "../../_providers/LocaleContext";
 import { useI18n } from "../../_providers/I18nProvider";
+import { useAuth } from "../../_providers/AuthProvider";
+import UserMenu from "../main/UserMenu";
 
 const drawerWidth = 240;
 
 export default function Header() {
   const theme = useTheme();
+  const {user,logout} = useAuth();
   const { locale, setLocale } = useLocale();
   const { t } = useI18n();
   const label = locale === "siLK" ? "SI" : "EN";
@@ -53,7 +56,7 @@ export default function Header() {
   };
 
   const handleLogout = async () => {
-    // await logout();
+    await logout();
     handleUserMenuClose();
   };
 
@@ -130,11 +133,11 @@ export default function Header() {
             {t("nav.takeQuiz")}
           </Typography>
         </Link>
-        {/* {user && (
+        {user && (
           <Typography variant="body1" sx={{ color: "text.primary" }}>
             <Link href="/dashboard">Dashboard</Link>
           </Typography>
-        )} */}
+        )}
       </Box>
       <Divider />
       <Box sx={{mt:1, display: "flex", flexDirection: "column", gap: 2 }}>
@@ -163,7 +166,7 @@ export default function Header() {
 
       {/* Mobile Auth Buttons */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1, p: 2 }}>
-        {/* {user ? (
+        {user ? (
           <>
             <Typography variant="body2" sx={{ color: "text.primary", mb: 1 }}>
               Welcome, {user.name}!
@@ -177,7 +180,7 @@ export default function Header() {
               Logout
             </Button>
           </>
-        ) : ( */}
+        ) : (
         <>
           <Link href="/login" passHref style={{ textDecoration: "none" }}>
             <Button
@@ -213,7 +216,7 @@ export default function Header() {
             </Button>
           </Link>
         </>
-        {/* )} */}
+          )} 
       </Box>
     </Box>
   );
@@ -355,9 +358,9 @@ export default function Header() {
             </Button>
 
             {/* Authentication Buttons */}
-            {/* {user ? (
+            {user ? (
                 <UserMenu/>
-            ) : ( */}
+            ) : (
             <>
               <Link href="/login" passHref style={{ textDecoration: "none" }}>
                 <Button
@@ -390,7 +393,7 @@ export default function Header() {
                 </Button>
               </Link>
             </>
-            {/* )} */}
+            )} 
           </Box>
         </Toolbar>
       </AppBar>

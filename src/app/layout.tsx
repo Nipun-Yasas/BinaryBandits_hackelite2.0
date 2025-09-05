@@ -2,7 +2,7 @@
 
 import "./globals.css";
 
-import {  useMemo } from "react";
+import {  Suspense,useMemo } from "react";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { createTheme } from "@mui/material/styles";
 import { enUS, siLK } from "@mui/material/locale";
@@ -50,9 +50,11 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <AppRouterCacheProvider>
+          <Suspense fallback={<></>}>
           <LocaleProvider>
             <AppThemeBridge>{children}</AppThemeBridge>
           </LocaleProvider>
+          </Suspense>
         </AppRouterCacheProvider>
       </body>
     </html>
