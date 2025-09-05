@@ -10,6 +10,8 @@ import { useI18n } from "../../_providers/I18nProvider";
 
 gsap.registerPlugin(ScrollTrigger);
 
+type Dict = Record<string, any>;
+
 function get(obj: Dict, path: string, fallback?: any) {
   return (
     path.split(".").reduce((acc, key) => acc?.[key], obj) ?? fallback ?? path
