@@ -23,11 +23,29 @@ export async function POST(req: NextRequest) {
 
   const exists = await User.findOne({ email });
   if (exists) {
-    return NextResponse.json({ error: "Email already in use" }, { status: 409 });
+    return NextResponse.json(
+      { error: "Email already in use" },
+      { status: 409 }
+    );
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
-  const user = await User.create({ email, passwordHash, name });
+
+  // Check if email domain indicates admin user
+  const adminDomains = process.env.ADMIN_EMAIL_DOMAINS?.split(",") || [
+    "@admin.com",
+    "@hackelite.com",
+  ];
+  const isAdmin = adminDomains.some((domain) =>
+    email.toLowerCase().endsWith(domain.trim().toLowerCase())
+  );
+
+  const user = await User.create({
+    email,
+    passwordHash,
+    name,
+    role: isAdmin ? "admin" : "user",
+  });
 
   const session = await getSession();
   const role = (user.role === "admin" ? "admin" : "user") as "user" | "admin";
