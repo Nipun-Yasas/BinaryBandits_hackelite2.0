@@ -132,6 +132,23 @@ export default function Header() {
             {t("nav.findMentors")}
           </Typography>
         </Link>
+
+        <Link href="/login" style={{ textDecoration: "none" }}>
+          <Typography
+            variant="body1"
+            sx={{
+              color: "primary.main",
+              transition: "color 0.3s ease",
+              mx: 2,
+              gap: 2,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <BookOpen size={16} />
+            Admin
+          </Typography>
+        </Link>
         {/* {user && (
           <Typography variant="body1" sx={{ color: "text.primary" }}>
             <Link href="/dashboard">Dashboard</Link>
@@ -336,6 +353,21 @@ export default function Header() {
               >
                 <Users size={16} />
                 {t("nav.findMentors")}
+              </Typography>
+            </Link>
+
+            <Link href="/admin" style={{ textDecoration: "none" }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "primary.main",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                }}
+              >
+                <BookOpen size={16} />
+                Admin
               </Typography>
             </Link>
 
