@@ -87,13 +87,34 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // const success = await login(formData.email.trim(), formData.password);
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email.trim(),
+          password: formData.password,
+        }),
+      });
 
-      // if (success) {
-      //   router.push("/dashboard");
-      // }
+      if (response.ok) {
+        // Get user info to check role
+        const userResponse = await fetch("/api/auth/me");
+        const userData = await userResponse.json();
+
+        if (userData.user?.role === "admin") {
+          router.push("/admin");
+        } else {
+          router.push("/dashboard");
+        }
+      } else {
+        const errorData = await response.json();
+        setErrors({ general: errorData.error || "Login failed" });
+      }
     } catch (error) {
       console.error("Login error:", error);
+      setErrors({ general: "Network error. Please try again." });
     } finally {
       setIsLoading(false);
     }
@@ -255,7 +276,10 @@ export default function LoginPage() {
                           height: 48,
                         }}
                       >
-                        <BookOpen size={24} color={theme.palette.primary.main} />
+                        <BookOpen
+                          size={24}
+                          color={theme.palette.primary.main}
+                        />
                       </Avatar>
                       <Typography
                         variant="h4"
@@ -279,7 +303,9 @@ export default function LoginPage() {
                       fontWeight: 800,
                       mb: 3,
                       fontSize: { xs: "2rem", md: "3rem" },
-                      color: theme.palette.getContrastText(theme.palette.primary.main),
+                      color: theme.palette.getContrastText(
+                        theme.palette.primary.main
+                      ),
                     }}
                   >
                     Welcome Back to
@@ -301,11 +327,14 @@ export default function LoginPage() {
                       opacity: 0.9,
                       lineHeight: 1.6,
                       maxWidth: "500px",
-                      color: theme.palette.getContrastText(theme.palette.primary.main),
+                      color: theme.palette.getContrastText(
+                        theme.palette.primary.main
+                      ),
                     }}
                   >
-                    Discover your path, explore careers, and get personalized guidance
-                    with PathFinder’s AI-powered platform for Sri Lankan students.
+                    Discover your path, explore careers, and get personalized
+                    guidance with PathFinder’s AI-powered platform for Sri
+                    Lankan students.
                   </Typography>
 
                   {/* Stats */}
@@ -340,7 +369,10 @@ export default function LoginPage() {
                           </Typography>
                           <Typography
                             variant="caption"
-                            sx={{ opacity: 0.8, color: theme.palette.text.secondary }}
+                            sx={{
+                              opacity: 0.8,
+                              color: theme.palette.text.secondary,
+                            }}
                           >
                             {stat.label}
                           </Typography>
@@ -353,37 +385,41 @@ export default function LoginPage() {
                   <Box
                     sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                   >
-                    {["Career Quiz & Personalized Suggestions", "Sinhala/English, Downloadable Reports", "AI Chatbot & Community Forum"].map(
-                      (feature, index) => (
-                        <motion.div
-                          key={index}
-                          variants={itemVariants}
-                          whileHover={{ x: 10 }}
+                    {[
+                      "Career Quiz & Personalized Suggestions",
+                      "Sinhala/English, Downloadable Reports",
+                      "AI Chatbot & Community Forum",
+                    ].map((feature, index) => (
+                      <motion.div
+                        key={index}
+                        variants={itemVariants}
+                        whileHover={{ x: 10 }}
+                      >
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 2 }}
                         >
                           <Box
-                            sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                            sx={{
+                              width: 8,
+                              height: 8,
+                              borderRadius: "50%",
+                              bgcolor: theme.palette.secondary.main,
+                            }}
+                          />
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              opacity: 0.9,
+                              color: theme.palette.getContrastText(
+                                theme.palette.primary.main
+                              ),
+                            }}
                           >
-                            <Box
-                              sx={{
-                                width: 8,
-                                height: 8,
-                                borderRadius: "50%",
-                                bgcolor: theme.palette.secondary.main,
-                              }}
-                            />
-                            <Typography
-                              variant="body1"
-                              sx={{
-                                opacity: 0.9,
-                                color: theme.palette.getContrastText(theme.palette.primary.main),
-                              }}
-                            >
-                              {feature}
-                            </Typography>
-                          </Box>
-                        </motion.div>
-                      )
-                    )}
+                            {feature}
+                          </Typography>
+                        </Box>
+                      </motion.div>
+                    ))}
                   </Box>
                 </Box>
               </motion.div>
@@ -417,7 +453,10 @@ export default function LoginPage() {
                           mb: 3,
                         }}
                       >
-                        <BookOpen size={28} color={theme.palette.primary.main} />
+                        <BookOpen
+                          size={28}
+                          color={theme.palette.primary.main}
+                        />
                         <Typography
                           variant="h5"
                           sx={{
@@ -496,7 +535,9 @@ export default function LoginPage() {
                         mt: 2,
                         borderColor: theme.palette.primary.main,
                         color: theme.palette.primary.main,
-                        "& .MuiChip-icon": { color: theme.palette.primary.main },
+                        "& .MuiChip-icon": {
+                          color: theme.palette.primary.main,
+                        },
                       }}
                     />
                   </motion.div>
@@ -523,7 +564,10 @@ export default function LoginPage() {
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
-                            <Mail size={20} color={theme.palette.text.secondary} />
+                            <Mail
+                              size={20}
+                              color={theme.palette.text.secondary}
+                            />
                           </InputAdornment>
                         ),
                       }}
@@ -545,7 +589,10 @@ export default function LoginPage() {
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
-                            <Lock size={20} color={theme.palette.text.secondary} />
+                            <Lock
+                              size={20}
+                              color={theme.palette.text.secondary}
+                            />
                           </InputAdornment>
                         ),
                         endAdornment: (

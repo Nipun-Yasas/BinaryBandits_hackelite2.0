@@ -100,8 +100,8 @@ export default function SignupPage() {
 
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long";
     }
 
     if (!formData.confirmPassword) {
@@ -122,22 +122,35 @@ export default function SignupPage() {
     setIsLoading(true);
 
     try {
-      // Replace this with your actual signup API call
-      // const success = await signup({
-      //   name: formData.name.trim(),
-      //   email: formData.email.trim(),
-      //   password: formData.password,
-      //   role: formData.role,
-      // });
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          password: formData.password,
+        }),
+      });
 
-      // Simulate success for demo:
-      const success = true;
+      if (response.ok) {
+        // Get user info to check role
+        const userResponse = await fetch("/api/auth/me");
+        const userData = await userResponse.json();
 
-      if (success) {
-        router.push("/login");
+        if (userData.user?.role === "admin") {
+          router.push("/admin");
+        } else {
+          router.push("/dashboard");
+        }
+      } else {
+        const errorData = await response.json();
+        setErrors({ general: errorData.error || "Signup failed" });
       }
     } catch (error) {
       console.error("Signup error:", error);
+      setErrors({ general: "Network error. Please try again." });
     } finally {
       setIsLoading(false);
     }
