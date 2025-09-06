@@ -340,6 +340,21 @@ export default function Header() {
               </Typography>
             </Link>
 
+            <Link href="/admin" style={{ textDecoration: "none" }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "primary.main",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                }}
+              >
+                <BookOpen size={16} />
+                Admin
+              </Typography>
+            </Link>
+
             {/* Language selector */}
             <Button
               variant="outlined"

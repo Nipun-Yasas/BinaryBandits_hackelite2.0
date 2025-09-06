@@ -29,6 +29,31 @@ export async function POST(req: NextRequest) {
     const { email, password, name, role: userRole } = parsed.data;
     debugLog("Creating user", { email, name, role: userRole });
 
+  const exists = await User.findOne({ email });
+  if (exists) {
+    return NextResponse.json(
+      { error: "Email already in use" },
+      { status: 409 }
+    );
+  }
+
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  // Check if email domain indicates admin user
+  const adminDomains = process.env.ADMIN_EMAIL_DOMAINS?.split(",") || [
+    "@admin.com",
+    "@hackelite.com",
+  ];
+  const isAdmin = adminDomains.some((domain) =>
+    email.toLowerCase().endsWith(domain.trim().toLowerCase())
+  );
+
+  const user = await User.create({
+    email,
+    passwordHash,
+    name,
+    role: isAdmin ? "admin" : "user",
+  });
     const exists = await User.findOne({ email });
     if (exists) {
       debugError("Email already exists", { email });
