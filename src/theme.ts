@@ -1,6 +1,17 @@
 import { createTheme } from "@mui/material/styles";
 
-declare module "@mui/material/styles" {}
+declare module "@mui/material/styles" {
+  interface Palette {
+    authtext: {
+      main: string;
+    };
+  }
+  interface PaletteOptions {
+    authtext: {
+      main: string;
+    };
+  }
+}
 
 const theme = createTheme({
   cssVariables: {
@@ -11,16 +22,16 @@ const theme = createTheme({
     light: {
       palette: {
         primary: {
-          main: "#8073fa", 
-          light: "#a79efc",
-          dark: "#5b4ec7", 
-          contrastText: "#ffffff", 
+          main: "#0B1D51",
+          light: "#3a4a7c",
+          dark: "#06123a",
+          contrastText: "#ffffff",
         },
         secondary: {
-          main: "#cf72ed",
-          light: "#e3a1f5",
-          dark: "#9e52b5",
-          contrastText: "#ffffff", 
+          main: "#725CAD",
+          light: "#a18be6",
+          dark: "#4c3977",
+          contrastText: "#ffffff",
         },
         error: {
           main: "#D32F2F",
@@ -46,13 +57,16 @@ const theme = createTheme({
           dark: "#2E7D32",
           contrastText: "#FFFFFF",
         },
+        authtext: {
+          main: "#FFFFFF",
+        },
       },
     },
     dark: {
       palette: {
         primary: {
-          main: "#8073fa",  
-          light: "#a79efc", 
+          main: "#8073fa",
+          light: "#a79efc",
           dark: "#5b4ec7",
           contrastText: "#ffffff",
         },
@@ -82,9 +96,12 @@ const theme = createTheme({
         },
         success: {
           main: "#66BB6A",
-            light: "#A5D6A7",
-            dark: "#388E3C",
+          light: "#A5D6A7",
+          dark: "#388E3C",
           contrastText: "#000000",
+        },
+        authtext: {
+          main: "#000000",
         },
       },
     },

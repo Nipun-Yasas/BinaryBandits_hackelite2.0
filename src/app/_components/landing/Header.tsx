@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { BookOpen, Users } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
 import { ThemeSwitcher } from "@toolpad/core";
 
@@ -15,6 +15,7 @@ import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
+import QuizIcon from '@mui/icons-material/Quiz';
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
@@ -25,11 +26,14 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 import { useLocale } from "../../_providers/LocaleContext";
 import { useI18n } from "../../_providers/I18nProvider";
+import { useAuth } from "../../_providers/AuthProvider";
+import UserMenu from "../main/UserMenu";
 
 const drawerWidth = 240;
 
 export default function Header() {
   const theme = useTheme();
+  const {user,logout} = useAuth();
   const { locale, setLocale } = useLocale();
   const { t } = useI18n();
   const label = locale === "siLK" ? "SI" : "EN";
@@ -52,7 +56,7 @@ export default function Header() {
   };
 
   const handleLogout = async () => {
-    // await logout();
+    await logout();
     handleUserMenuClose();
   };
 
@@ -74,7 +78,7 @@ export default function Header() {
           p: 2,
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <BookOpen size={20} color={theme.palette.primary.main} />
           <Typography
             variant="h5"
@@ -91,7 +95,7 @@ export default function Header() {
         </Box>
       </Box>
       <Divider />
-      <Box sx={{ py: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+      <Box sx={{ py: 2, display: "flex", flexDirection: "column", gap: 2,justifyContent:'center' }}>
         <Link href="#about" style={{ textDecoration: "none" }}>
           <Typography
             variant="body1"
@@ -116,48 +120,28 @@ export default function Header() {
           </Typography>
         </Link>
 
-        <Link href="/login" style={{ textDecoration: "none" }}>
+        <Link href="/login" style={{ textDecoration: "none",
+              alignItems: "center",display:'flex',justifyContent:'center',gap:5 }}>
+                
+            <QuizIcon/>
           <Typography
             variant="body1"
             sx={{
               color: "primary.main",
               transition: "color 0.3s ease",
-              mx: 2,
-              gap: 2,
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Users size={16} />
-            {t("nav.findMentors")}
+            }}>
+            {t("nav.takeQuiz")}
           </Typography>
         </Link>
-
-        <Link href="/login" style={{ textDecoration: "none" }}>
-          <Typography
-            variant="body1"
-            sx={{
-              color: "primary.main",
-              transition: "color 0.3s ease",
-              mx: 2,
-              gap: 2,
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <BookOpen size={16} />
-            Admin
-          </Typography>
-        </Link>
-        {/* {user && (
+        {user && (
           <Typography variant="body1" sx={{ color: "text.primary" }}>
             <Link href="/dashboard">Dashboard</Link>
           </Typography>
-        )} */}
+        )}
       </Box>
       <Divider />
-      <Box sx={{ py: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
+      <Box sx={{mt:1, display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", }}>
           <Button
             variant="outlined"
             size="small"
@@ -182,7 +166,7 @@ export default function Header() {
 
       {/* Mobile Auth Buttons */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1, p: 2 }}>
-        {/* {user ? (
+        {user ? (
           <>
             <Typography variant="body2" sx={{ color: "text.primary", mb: 1 }}>
               Welcome, {user.name}!
@@ -196,7 +180,7 @@ export default function Header() {
               Logout
             </Button>
           </>
-        ) : ( */}
+        ) : (
         <>
           <Link href="/login" passHref style={{ textDecoration: "none" }}>
             <Button
@@ -232,7 +216,7 @@ export default function Header() {
             </Button>
           </Link>
         </>
-        {/* )} */}
+          )} 
       </Box>
     </Box>
   );
@@ -273,7 +257,7 @@ export default function Header() {
                   textDecoration: "none",
                   display: "flex",
                   alignItems: "center",
-                  gap: 1,
+                  gap: 8,
                 }}
               >
                 <BookOpen size={32} color={theme.palette.primary.main} />
@@ -351,8 +335,8 @@ export default function Header() {
                   gap: 1,
                 }}
               >
-                <Users size={16} />
-                {t("nav.findMentors")}
+                <QuizIcon/>
+                {t("nav.takeQuiz")}
               </Typography>
             </Link>
 
@@ -389,9 +373,9 @@ export default function Header() {
             </Button>
 
             {/* Authentication Buttons */}
-            {/* {user ? (
+            {user ? (
                 <UserMenu/>
-            ) : ( */}
+            ) : (
             <>
               <Link href="/login" passHref style={{ textDecoration: "none" }}>
                 <Button
@@ -420,11 +404,11 @@ export default function Header() {
                     transition: "all 0.3s ease",
                   }}
                 >
-                  {t("nav.signUp")}
+                  {t("nav.signup")}
                 </Button>
               </Link>
             </>
-            {/* )} */}
+            )} 
           </Box>
         </Toolbar>
       </AppBar>

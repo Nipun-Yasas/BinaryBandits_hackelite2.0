@@ -140,8 +140,6 @@ export default function CallToAction() {
               variant="outlined"
               size="large"
               sx={{
-                borderColor: theme.palette.primary.main,
-                color: theme.palette.primary.main,
                 "&:hover": {
                   borderColor: theme.palette.secondary.main,
                   color: theme.palette.secondary.main,

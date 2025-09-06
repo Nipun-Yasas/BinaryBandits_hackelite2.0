@@ -12,19 +12,21 @@ import {
   Typography,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-// import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useTheme } from "@mui/material/styles";
-// import Link from "next/link";
-// import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { useAuth } from "../../_providers/AuthProvider";
+
 
 const UserMenu: React.FC = () => {
-  const theme = useTheme();
-  // const { user, logout } = useAuth();
-  // const pathname = usePathname();
-  // const isHome = pathname === "/";
-  // const menuLinkHref = isHome ? "/dashboard" : "/profile";
-  // const menuLabel = isHome ? "Dashboard" : "My Profile";
+  const {user,logout} = useAuth();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const isHome = pathname === "/";
+  const menuLinkHref = isHome ? "/dashboard" : "/profile";
+  const menuLabel = isHome ? "Dashboard" : "My Profile";
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -37,17 +39,15 @@ const UserMenu: React.FC = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    handleCloseMenu();
-    window.location.href = "/login";
+  const handleLogout = () => {
+    try {
+      logout();
+    } catch {}
+    setAnchorEl(null);
+    router.push("/login");
   };
 
-  // if (!user) {
-  //   return null;
-  // }
-
-  const avatarGradient = `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`;
+  if (!user) return null;
 
   return (
     <Stack direction="row" spacing={2} alignItems="center">
@@ -56,34 +56,41 @@ const UserMenu: React.FC = () => {
       <Box
         sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}
         onClick={handleOpenMenu}
+        aria-controls={open ? "user-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
       >
         <Stack direction="row" spacing={1} alignItems="center">
           <Avatar
-            // src={user.avatar || undefined}
-            // alt={user.name}
             sx={{
-              width: 40,
-              height: 40,
-              background: avatarGradient,
-              fontSize: "1.2rem",
+              width: 44,
+              height: 44,
+              background: "linear-gradient(135deg, #007BFF 0%, #6A0DAD 100%)",
+              fontSize: "0.95rem",
               fontWeight: 700,
-              color: theme.palette.getContrastText(theme.palette.primary.main),
             }}
           >
-            {/* {!user.avatar && <PersonOutlineIcon fontSize="small" />} */}
+            {user?.name}
           </Avatar>
           <Typography
             variant="body1"
-            color={theme.palette.text.secondary}
+            color="#737791"
             fontFamily="'Poppins-Medium', Helvetica"
             fontWeight={500}
+            sx={{
+              maxWidth: 160,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+            title={user?.name}
           >
-            {/* {user.name.split(" ")[0]} */}
+            {user?.name}
           </Typography>
           <KeyboardArrowDownIcon
             sx={{
               color: "text.secondary",
-              fontSize: 11,
+              fontSize: 18,
               transform: open ? "rotate(180deg)" : "none",
               transition: "transform 0.2s",
             }}
@@ -92,17 +99,17 @@ const UserMenu: React.FC = () => {
       </Box>
 
       <Menu
+        id="user-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleCloseMenu}
-        onClick={handleCloseMenu}
         PaperProps={{
           elevation: 3,
           sx: {
             overflow: "visible",
             filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.1))",
-            
-            width: 200,
+            mt: 1.5,
+            width: 220,
             borderRadius: 2,
             "& .MuiMenuItem-root": {
               px: 2,
@@ -113,34 +120,20 @@ const UserMenu: React.FC = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        {/* <Link href={menuLinkHref} passHref legacyBehavior>
-          <MenuItem component="a">
-            <ListItemIcon>
-              <PersonOutlineIcon fontSize="small" sx={{ color: theme.palette.text.secondary }} />
-            </ListItemIcon>
-            <Typography variant="body2" color="text.primary">
-              {menuLabel}
-            </Typography>
-          </MenuItem>
-        </Link> */}
+        <MenuItem component={Link} href={menuLinkHref}>
+          <ListItemIcon>
+            <PersonOutlineIcon fontSize="small" sx={{ color: "#737791" }} />
+          </ListItemIcon>
+          <Typography variant="body2" color="text.primary">
+            {menuLabel}
+          </Typography>
+        </MenuItem>
 
         <Divider sx={{ my: 1 }} />
 
-        <MenuItem
-          sx={{
-            color: theme.palette.primary.main,
-            "&:hover": {
-              background: theme.palette.action.hover,
-              color: theme.palette.secondary.main,
-              "& .MuiListItemIcon-root": {
-                color: theme.palette.secondary.main,
-              },
-            },
-          }}
-          onClick={handleLogout}
-        >
+        <MenuItem onClick={handleLogout} sx={{ color: "primary.main" }}>
           <ListItemIcon>
-            <LogoutIcon fontSize="small" sx={{ color: theme.palette.primary.main }} />
+            <LogoutIcon fontSize="small" sx={{ color: "primary.main" }} />
           </ListItemIcon>
           <Typography variant="body2">Log out</Typography>
         </MenuItem>

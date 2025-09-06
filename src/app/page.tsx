@@ -10,18 +10,22 @@ import Stats from "./_components/landing/Stats";
 import Testimonials from "./_components/landing/Testimonial";
 import CallToAction from "./_components/landing/CallToAction";
 import Footer from "./_components/landing/Footer";
+
+import { useTheme } from "@mui/material/styles";
 import { Box } from "@mui/material";
 
 import { Cardio } from "ldrs/react";
 import "ldrs/react/Cardio.css";
 
 export default function Home() {
+  
+  const theme = useTheme();
   const [pageLoaded, setPageLoaded] = useState(false);
   const [minDelayPassed, setMinDelayPassed] = useState(false);
   const isReady = pageLoaded && minDelayPassed;
 
   useEffect(() => {
-    const t = window.setTimeout(() => setMinDelayPassed(true), 1000);
+    const t = window.setTimeout(() => setMinDelayPassed(true), 1);
     return () => window.clearTimeout(t);
   }, []);
 
@@ -50,7 +54,7 @@ export default function Home() {
           padding: { xs: 2, sm: 3, md: 4 },
         }}
       >
-        <Cardio size="50" stroke="4" speed="2" color="#8073fa" />
+        <Cardio size="50" stroke="4" speed="2" color={theme.palette.primary.main} />
       </Box>
     );
   }

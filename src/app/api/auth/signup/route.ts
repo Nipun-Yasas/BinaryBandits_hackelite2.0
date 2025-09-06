@@ -4,22 +4,30 @@ import bcrypt from "bcryptjs";
 import connectToDB from "@/app/lib/db";
 import User from "@/app/models/User";
 import { getSession } from "@/app/lib/auth";
+import { debugLog, debugError } from "@/app/lib/debug";
 
 const SignupSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8),
-  name: z.string().optional(),
+  password: z.string().min(6),
+  name: z.string().min(1, "Name is required"),
+  role: z.enum(["user", "admin"]).optional(),
 });
 
 export async function POST(req: NextRequest) {
-  await connectToDB();
-  const json = await req.json().catch(() => ({}));
-  const parsed = SignupSchema.safeParse(json);
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.format() }, { status: 400 });
-  }
+  try {
+    debugLog("Signup attempt started");
+    
+    await connectToDB();
+    const json = await req.json().catch(() => ({}));
+    const parsed = SignupSchema.safeParse(json);
+    
+    if (!parsed.success) {
+      debugError("Signup validation failed", parsed.error.format());
+      return NextResponse.json({ error: "Invalid input data" }, { status: 400 });
+    }
 
-  const { email, password, name } = parsed.data;
+    const { email, password, name, role: userRole } = parsed.data;
+    debugLog("Creating user", { email, name, role: userRole });
 
   const exists = await User.findOne({ email });
   if (exists) {
@@ -46,11 +54,33 @@ export async function POST(req: NextRequest) {
     name,
     role: isAdmin ? "admin" : "user",
   });
+    const exists = await User.findOne({ email });
+    if (exists) {
+      debugError("Email already exists", { email });
+      return NextResponse.json({ error: "Email already in use" }, { status: 409 });
+    }
 
-  const session = await getSession();
-  const role = (user.role === "admin" ? "admin" : "user") as "user" | "admin";
-  session.user = { id: String(user._id), email: user.email, role };
-  await session.save();
+    const passwordHash = await bcrypt.hash(password, 10);
+    const user = await User.create({ 
+      email, 
+      passwordHash, 
+      name,
+      role: userRole || "user", // Use the role from form or default to "user"
+    });
 
-  return NextResponse.json({ ok: true });
+    const session = await getSession();
+    session.user = { 
+      id: String(user._id), 
+      email: user.email, 
+      role: user.role as "user" | "admin", 
+      name: user.name || undefined 
+    };
+    await session.save();
+
+    debugLog("Signup successful", { email, role: user.role });
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    debugError("Signup error", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }

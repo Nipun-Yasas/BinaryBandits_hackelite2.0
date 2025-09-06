@@ -50,8 +50,6 @@ export default function Footer() {
     };
   }, []);
 
-  const bgLeft = theme.palette.primary.main;
-  const bgRight = theme.palette.primary.dark;
   const contrast = theme.palette.getContrastText(theme.palette.primary.main);
 
   return (
@@ -63,7 +61,7 @@ export default function Footer() {
         mt: { xs: 2, md: 2 },
         width: "100%",
         color: contrast,
-        background: `linear-gradient(135deg, ${bgLeft} 0%, ${bgRight} 100%)`,
+        backgroundColor:"primary.main",
         borderTop: `1px solid ${alpha(contrast, 0.12)}`,
       }}
     >

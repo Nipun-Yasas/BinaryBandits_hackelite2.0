@@ -1,7 +1,8 @@
-"use client";
+"use client"
 
 import "./globals.css";
-import { Suspense, useMemo } from "react";
+
+import {  Suspense,useMemo } from "react";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { createTheme } from "@mui/material/styles";
 import { enUS, siLK } from "@mui/material/locale";
@@ -11,8 +12,8 @@ import NAVIGATION from "./_utils/navigation";
 import theme from "../theme";
 import { LocaleProvider, useLocale } from "./_providers/LocaleContext";
 import { I18nProvider } from "./_providers/I18nProvider";
-import { Poppins, Inter } from "next/font/google";
-import Loading from "./loading";
+import { AuthProvider } from "./_providers/AuthProvider";
+import { Inter } from "next/font/google";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,12 +21,6 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const poppins = Poppins({
-  weight: ["300", "400", "500", "600", "700", "800"],
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-poppins",
-});
 
 function AppThemeBridge({ children }: { children: React.ReactNode }) {
   const { locale } = useLocale();
@@ -36,7 +31,9 @@ function AppThemeBridge({ children }: { children: React.ReactNode }) {
 
   return (
     <NextAppProvider navigation={NAVIGATION} theme={themedWithLocale}>
-      <I18nProvider>{children}</I18nProvider>
+      <AuthProvider>
+        <I18nProvider>{children}</I18nProvider>
+      </AuthProvider>
     </NextAppProvider>
   );
 }
@@ -49,13 +46,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${poppins.variable}`}
+        className={`${inter.variable}`}
         suppressHydrationWarning
       >
         <AppRouterCacheProvider>
+          <Suspense fallback={<></>}>
           <LocaleProvider>
             <AppThemeBridge>{children}</AppThemeBridge>
           </LocaleProvider>
+          </Suspense>
         </AppRouterCacheProvider>
       </body>
     </html>
