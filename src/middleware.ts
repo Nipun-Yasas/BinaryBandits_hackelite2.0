@@ -1,15 +1,28 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getSession } from "@/app/lib/auth";
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
   // Check if the request is for admin routes
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    const session = await getSession();
-
-    // If no session or not admin, redirect to admin login
-    if (!session?.user || session.user.role !== "admin") {
+  if (pathname.startsWith("/admin")) {
+    // Check for session cookie
+    const sessionCookie = request.cookies.get("pathfinder-session");
+    
+    // If no session cookie, redirect to admin login
+    if (!sessionCookie) {
       const loginUrl = new URL("/admin-login", request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  // Protect main dashboard routes - require login
+  if (pathname.startsWith("/(main)") || pathname === "/dashboard" || pathname === "/profile") {
+    const sessionCookie = request.cookies.get("pathfinder-session");
+    
+    // If no session cookie, redirect to login
+    if (!sessionCookie) {
+      const loginUrl = new URL("/login", request.url);
       return NextResponse.redirect(loginUrl);
     }
   }
@@ -18,5 +31,15 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - login/signup pages
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico|login|signup|admin-login).*)",
+  ],
 };

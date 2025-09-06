@@ -1,16 +1,26 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getSession } from "@/app/lib/auth";
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Protect admin routes
   if (pathname.startsWith("/admin") || pathname.startsWith("/(main)/admin")) {
-    const session = await getSession();
+    // Check for session cookie
+    const sessionCookie = request.cookies.get("pathfinder-session");
+    
+    // If no session cookie, redirect to admin login
+    if (!sessionCookie) {
+      return NextResponse.redirect(new URL("/admin-login", request.url));
+    }
+  }
 
-    if (!session.user || session.user.role !== "admin") {
-      // Redirect to login if not authenticated or not admin
+  // Protect main dashboard routes - require login
+  if (pathname.startsWith("/(main)") || pathname === "/dashboard" || pathname === "/profile") {
+    const sessionCookie = request.cookies.get("pathfinder-session");
+    
+    // If no session cookie, redirect to login
+    if (!sessionCookie) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }
@@ -26,7 +36,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - login/signup pages
      */
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|login|signup|admin-login).*)",
   ],
 };
