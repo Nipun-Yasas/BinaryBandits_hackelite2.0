@@ -25,24 +25,19 @@ const NAVIGATION: Navigation = [
     icon: <AccountCircleIcon />,
   },
   {
-    segment: "quiz",
-    title: "Quiz",
+    segment: "Quiz",
+    title: "Career Quiz",
     icon: <QuizIcon />,
   },
   {
     segment: "explore",
-    title: "Career suggestions",
+    title: "Career Suggestions",
     icon: <WorkIcon />,
   },
   {
     segment: "forum",
     title: "Forum",
     icon: <ForumIcon />,
-  },
-  {
-    segment: "explore",
-    title: "Explore careers",
-    icon: <ExploreIcon />,
   },
   {
     kind: "divider",
