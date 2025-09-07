@@ -9,7 +9,6 @@ export interface SignupData {
   name: string;
   email: string;
   password: string;
-  role?: "user" | "admin";
 }
 
 export interface ApiResponse<T = unknown> {
@@ -81,41 +80,46 @@ export async function login(data: LoginData): Promise<ApiResponse> {
 
 export async function signup(data: SignupData): Promise<ApiResponse> {
   try {
-    const result = await apiRequest<ApiResponse>("/api/auth/signup", {
+    const res = await fetch("/api/auth/signup", {
       method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    return result;
-  } catch (error) {
-    if (error instanceof ApiError) {
-      return { error: error.message };
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      return { ok: false, error: json.error || "Signup failed" };
     }
-    return { error: "Network error. Please try again." };
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: "Network error" };
   }
 }
 
 export async function logout(): Promise<ApiResponse> {
   try {
-    const result = await apiRequest<ApiResponse>("/api/auth/logout", {
+    const res = await fetch("/api/auth/logout", {
       method: "POST",
+      credentials: "include",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
     });
-    return result;
-  } catch (error) {
-    if (error instanceof ApiError) {
-      return { error: error.message };
+    if (!res.ok) {
+      const j = await res.json().catch(() => ({}));
+      return { ok: false, error: j.error || "Logout failed" };
     }
-    return { error: "Network error. Please try again." };
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: "Network error logging out" };
   }
 }
 
-export async function getCurrentUser(): Promise<ApiResponse<User>> {
-  try {
-    const result = await apiRequest<ApiResponse<User>>("/api/auth/me");
-    return result;
-  } catch (error) {
-    if (error instanceof ApiError) {
-      return { error: error.message };
-    }
-    return { error: "Network error. Please try again." };
-  }
+// Adjust getCurrentUser to ensure cookies sent
+export async function getCurrentUser(): Promise<User | null> {
+  const res = await fetch("/api/auth/me", { credentials: "include", cache: "no-store" });
+  if (!res.ok) return null;
+  const json = await res.json();
+  return json.user ?? null;
 }
+
+

@@ -1,9 +1,6 @@
-import React from 'react'
+'use client';
 
-export default function page() {
-  return (
-    <div>
-      dashboard
-    </div>
-  )
+export default function Page() {
+
+  return <div>dashboard</div>;
 }

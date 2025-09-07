@@ -18,9 +18,8 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "../../_providers/AuthProvider";
 
-
 const UserMenu: React.FC = () => {
-  const {user,logout} = useAuth();
+  const { user, logout } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -39,11 +38,11 @@ const UserMenu: React.FC = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    try {
-      logout();
-    } catch {}
+  const handleLogout = async () => {
     setAnchorEl(null);
+    try {
+      await logout(); // await so cookie cleared before navigation
+    } catch {}
     router.push("/login");
   };
 
@@ -65,12 +64,15 @@ const UserMenu: React.FC = () => {
             sx={{
               width: 44,
               height: 44,
-              background: "linear-gradient(135deg, #007BFF 0%, #6A0DAD 100%)",
+              background: "linear-gradient(135deg, #0B1D51 0%, #725CAD 100%)",
               fontSize: "0.95rem",
-              fontWeight: 700,
+              fontWeight: 600,
+              letterSpacing: 0.5,
             }}
           >
-            {user?.name}
+            {user?.name
+              ? user.name.charAt(0).toUpperCase()
+              : <PersonOutlineIcon fontSize="small" />}
           </Avatar>
           <Typography
             variant="body1"

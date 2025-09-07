@@ -9,10 +9,6 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
@@ -40,7 +36,6 @@ export default function SignupForm() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "user" as "user" | "admin",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -52,10 +47,6 @@ export default function SignupForm() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
-  };
-
-  const handleRoleChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, role: value as "user" | "admin" }));
   };
 
   const validateForm = () => {
@@ -90,7 +81,6 @@ export default function SignupForm() {
         name: formData.name.trim(),
         email: formData.email.trim(),
         password: formData.password,
-        role: formData.role,
       });
 
       if (response.error) {
@@ -237,32 +227,6 @@ export default function SignupForm() {
                 ),
               }}
             />
-          </motion.div>
-
-          <motion.div variants={itemVariants}>
-            <FormControl
-              fullWidth
-              sx={{
-                mb: 3,
-                
-              }}
-            >
-              <InputLabel>{t("signup.accountTypeLabel")}</InputLabel>
-              <Select
-                value={formData.role}
-                label={t("signup.accountTypeLabel")}
-                onChange={(e) => handleRoleChange(e.target.value)}
-                disabled={isLoading}
-                startAdornment={
-                  <InputAdornment position="start">
-                    <User size={20}/>
-                  </InputAdornment>
-                }
-              >
-                <MenuItem value="user">👤 {t("signup.userOption")}</MenuItem>
-                <MenuItem value="admin">⚡ {t("signup.adminOption")}</MenuItem>
-              </Select>
-            </FormControl>
           </motion.div>
 
           <motion.div variants={itemVariants}>

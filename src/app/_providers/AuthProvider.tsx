@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { User, getCurrentUser } from "@/app/lib/api";
+import { User, getCurrentUser, logout as apiLogout } from "@/app/lib/api";
 
 interface AuthContextType {
   user: User | null;
@@ -31,8 +31,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       setLoading(true);
       const response = await getCurrentUser();
-      if (response.data) {
-        setUser(response.data);
+      const apiUser = (response as any).user || (response as any).data || response;
+      if (apiUser) {
+        setUser(apiUser);
       } else {
         setUser(null);
       }
@@ -52,8 +53,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setUser(userData);
   };
 
-  const logout = () => {
-    setUser(null);
+  const logout = async () => {
+    try {
+      setUser(null);
+      await apiLogout();
+    } catch (e) {
+      console.error("Logout error", e);
+    } finally {
+    }
   };
 
   const refetch = () => fetchUser();

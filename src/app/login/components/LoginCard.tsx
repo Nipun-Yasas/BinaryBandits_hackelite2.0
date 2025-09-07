@@ -23,6 +23,7 @@ import { LogIn, Sparkles, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-rea
 
 import { login } from "../../lib/api";
 import { useI18n } from "../../_providers/I18nProvider";
+import { useAuth } from "../../_providers/AuthProvider";
 
 const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
 
@@ -31,6 +32,7 @@ export default function LoginCard() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { t } = useI18n();
+  const { refetch } = useAuth();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
@@ -72,9 +74,10 @@ export default function LoginCard() {
 
       if (response.error) {
         setErrors({ submit: response.error });
-      } else {
+      } else {    
         setSuccess(true);
-        setTimeout(() => router.push("/dashboard"), 1500);
+        await refetch();
+        router.replace("/dashboard");
       }
     } catch (error) {
       console.error("Login error:", error);
