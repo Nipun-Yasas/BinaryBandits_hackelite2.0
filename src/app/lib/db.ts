@@ -11,10 +11,25 @@ export async function connectToDB() {
   }
 
   if (!global._mongooseConn) {
+    const options = {
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 10000, // 10 seconds
+      socketTimeoutMS: 45000, // 45 seconds
+      maxPoolSize: 10,
+      retryWrites: true,
+      retryReads: true,
+      dbName: process.env.MONGODB_DB || 'hacklightDb'
+    };
+
     global._mongooseConn = mongoose
-      .connect(uri, { dbName: process.env.MONGODB_DB || undefined })
+      .connect(uri, options)
       .then((m: typeof mongoose) => {
+        console.log('MongoDB connected successfully');
         return m;
+      })
+      .catch((error) => {
+        console.error('MongoDB connection error:', error);
+        throw error;
       });
   }
   return global._mongooseConn;
