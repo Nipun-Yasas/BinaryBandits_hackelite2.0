@@ -324,7 +324,7 @@ export default function Layout({ children }: LayoutProps) {
   ] as const;
 
   return (
-    <NextAppProvider theme={theme} navigation={navigation}>
+    <NextAppProvider navigation={navigation}>
       <DashboardLayout
         slots={{
           appTitle: CustomAppTitle,

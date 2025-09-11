@@ -1,27 +1,16 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import { createTheme } from "@mui/material/styles";
-import { enUS, siLK } from "@mui/material/locale";
-import { ThemeProvider } from '@mui/material';
-
+import { useEffect } from "react";
+import { LocaleProvider } from "@/app/_providers/LocaleContext";
+import { I18nProvider } from "@/app/_providers/I18nProvider";
+import { NextAppProvider } from "@toolpad/core/nextjs";
 import theme from "../../theme";
-import { useLocale } from "../_providers/LocaleContext";
-import { I18nProvider } from "../_providers/I18nProvider";
-import { LocaleProvider } from "../_providers/LocaleContext";
 
 export default function ClientThemeProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { locale } = useLocale();
-
-  const themedWithLocale = useMemo(
-    () => createTheme(theme, locale === "siLK" ? siLK : enUS),
-    [locale]
-  );
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const html = document.documentElement;
@@ -32,10 +21,13 @@ export default function ClientThemeProvider({
   }, []);
 
   return (
+    <NextAppProvider theme={theme}>
+
     <LocaleProvider>
-      <ThemeProvider theme={themedWithLocale}>
-        <I18nProvider>{children}</I18nProvider>
-      </ThemeProvider>
+      <I18nProvider>{children}</I18nProvider>
     </LocaleProvider>
+    </NextAppProvider>
   );
 }
+
+
