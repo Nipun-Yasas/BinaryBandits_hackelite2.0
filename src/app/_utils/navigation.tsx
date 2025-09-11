@@ -14,7 +14,7 @@ export function buildNavigation(role?: string): Navigation {
     { kind: "header", title: " Learning Hub" },
     { segment: "dashboard", title: "Dashboard", icon: <DashboardIcon /> },
     { segment: "profile", title: "Profile", icon: <AccountCircleIcon /> },
-    { segment: "quiz", title: "Quiz", icon: <QuizIcon /> },
+    { segment: "quiz", title: "quiz", icon: <QuizIcon /> },
     { segment: "careersuggestion", title: "Career suggestions", icon: <WorkIcon /> },
     { segment: "discussion", title: "Discussion Forum", icon: <ForumIcon /> },
     { segment: "careerexplore", title: "Explore careers", icon: <ExploreIcon /> },
