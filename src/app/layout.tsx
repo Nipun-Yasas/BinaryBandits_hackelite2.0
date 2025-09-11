@@ -22,13 +22,13 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable}`} suppressHydrationWarning>
         <AuthProvider>
-          <ClientThemeProvider>
-            <AppRouterCacheProvider>
-              <Suspense fallback={<></>}>
+          <Suspense fallback={<></>}>
+            <ClientThemeProvider>
+              <AppRouterCacheProvider>
                 {children}
-              </Suspense>
-            </AppRouterCacheProvider>
-          </ClientThemeProvider>
+              </AppRouterCacheProvider>
+            </ClientThemeProvider>
+          </Suspense>
         </AuthProvider>
       </body>
     </html>
