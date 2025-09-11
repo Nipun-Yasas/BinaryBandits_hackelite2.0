@@ -42,12 +42,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #0B1D51 0%, #725CAD 100%);
+  background: linear-gradient(135deg, #007bff 0%, #6a0dad 100%);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #0B1D51 0%, #725CAD 100%);
+  background: linear-gradient(135deg, #007bff 0%, #6a0dad 100%);
 }
 
 a {
@@ -56,7 +56,7 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid #8073fa;
+  outline: 2px solid #007bff;
   outline-offset: 2px;
   border-radius: 4px;
 }

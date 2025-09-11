@@ -21,17 +21,17 @@ const theme = createTheme({
   colorSchemes: {
     light: {
       palette: {
-        primary: {
-          main: "#0B1D51",
-          light: "#3a4a7c",
-          dark: "#06123a",
-          contrastText: "#ffffff",
+       primary: {
+          main: "#007BFF",
+          light: "#4DA3FF",
+          dark: "#0056CC",
+          contrastText: "#fff",
         },
         secondary: {
-          main: "#725CAD",
-          light: "#a18be6",
-          dark: "#4c3977",
-          contrastText: "#ffffff",
+          main: "#6A0DAD",
+          light: "#8B3DCC",
+          dark: "#4A0080",
+          contrastText: "#fff",
         },
         error: {
           main: "#D32F2F",
@@ -65,16 +65,16 @@ const theme = createTheme({
     dark: {
       palette: {
         primary: {
-          main: "#8073fa",
-          light: "#a79efc",
-          dark: "#5b4ec7",
-          contrastText: "#ffffff",
+          main: "#007BFF",
+          light: "#4DA3FF",
+          dark: "#0056CC",
+          contrastText: "#fff",
         },
         secondary: {
-          main: "#cf72ed",
-          light: "#e3a1f5",
-          dark: "#9e52b5",
-          contrastText: "#ffffff",
+          main: "#6A0DAD",
+          light: "#8B3DCC",
+          dark: "#4A0080",
+          contrastText: "#fff",
         },
         error: {
           main: "#EF5350",
@@ -133,7 +133,7 @@ const theme = createTheme({
       fontWeight: 600,
       fontFamily: "Poppins, sans-serif",
       lineHeight: 1.4,
-      color: "#8073fa",
+      color: "#007bff",
     },
     h5: {
       fontSize: "1.25rem",

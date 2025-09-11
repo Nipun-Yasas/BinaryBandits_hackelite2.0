@@ -1,111 +1,98 @@
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 import User from "../../models/User";
-import { connectToDB } from "../../lib/db";
-import { getSession } from "../../lib/auth";
 
-export async function GET() {
+type UpdatePayload = {
+  name?: string;
+  fullName?: string;
+  bio?: string;
+  school?: string;
+  grade?: string;
+};
+
+export const runtime = "nodejs";
+
+let isConnected = false;
+async function connectToDB() {
+  if (isConnected) return;
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error("MONGODB_URI is not set");
+  }
+  await mongoose.connect(uri);
+  isConnected = true;
+}
+
+function getUserId(req: NextRequest) {
+  const raw = req.headers.get("x-user-id")?.trim();
+  if (!raw || raw === "undefined" || raw === "null") return null;
+  return raw;
+}
+
+function ensureValidObjectId(id: string | null) {
+  if (!id) return { ok: false, status: 401 as const, message: "Unauthorized" };
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return { ok: false, status: 400 as const, message: "Invalid user id" };
+  }
+  return { ok: true as const };
+}
+
+export async function GET(req: NextRequest) {
   try {
-    const session = await getSession();
-    
-    if (!session.user?.id) {
-      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    const userId = getUserId(req);
+    const valid = ensureValidObjectId(userId);
+    if (!valid.ok) {
+      return NextResponse.json({ error: valid.message }, { status: valid.status });
     }
 
     await connectToDB();
 
-    const user = await User.findById(session.user.id).select("-passwordHash");
+    const user = await User.findById(userId).lean();
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json({
-      id: user._id,
-      email: user.email,
-      name: user.name,
-      fullName: user.fullName || user.name,
-      profilePicture: user.profilePicture || user.avatarUrl,
-      school: user.school || "",
-      grade: user.grade || "Grade 10",
-      bio: user.bio || "",
-      role: user.role,
-      createdAt: user.createdAt,
-    });
-  } catch (error) {
-    console.error("Profile fetch error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ user }, { status: 200 });
+  } catch (err) {
+    console.error("GET /api/profile error:", err);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
-export async function PUT(request: NextRequest) {
+export async function PUT(req: NextRequest) {
   try {
-    const session = await getSession();
-    
-    if (!session.user?.id) {
-      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    const userId = getUserId(req);
+    const valid = ensureValidObjectId(userId);
+    if (!valid.ok) {
+      return NextResponse.json({ error: valid.message }, { status: valid.status });
     }
 
-    const body = await request.json();
-    const { fullName, school, grade, bio, profilePicture } = body;
+    const body = await req.json();
 
-    // Validation
-    const errors: Record<string, string> = {};
-    
-    if (!fullName?.trim()) {
-      errors.fullName = "Full name is required";
-    }
-    
-    if (!school?.trim()) {
-      errors.school = "School/Institution is required";
-    }
-    
-    if (!grade) {
-      errors.grade = "Grade/Year is required";
-    }
-
-    if (bio && bio.length > 500) {
-      errors.bio = "Bio must be less than 500 characters";
-    }
-
-    if (Object.keys(errors).length > 0) {
-      return NextResponse.json({ error: "Validation failed", errors }, { status: 400 });
+    // Allow only model fields
+    const allowed = ["name", "fullName", "bio", "school", "grade"] as const;
+    const update: UpdatePayload = {};
+    for (const key of allowed) {
+      const val = body[key];
+      if (typeof val === "string") {
+        update[key] = val;
+      }
     }
 
     await connectToDB();
 
-    const updatedUser = await User.findByIdAndUpdate(
-      session.user.id,
-      {
-        fullName: fullName.trim(),
-        name: fullName.trim(), // Update both fullName and name for compatibility
-        school: school.trim(),
-        grade,
-        bio: bio?.trim() || "",
-        ...(profilePicture && { profilePicture }),
-      },
-      { new: true, runValidators: true }
-    ).select("-passwordHash");
+    const updated = await User.findByIdAndUpdate(userId, update, {
+      new: true,
+      runValidators: true,
+    }).lean();
 
-    if (!updatedUser) {
+    if (!updated) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json({
-      message: "Profile updated successfully",
-      user: {
-        id: updatedUser._id,
-        email: updatedUser.email,
-        name: updatedUser.name,
-        fullName: updatedUser.fullName,
-        profilePicture: updatedUser.profilePicture || updatedUser.avatarUrl,
-        school: updatedUser.school,
-        grade: updatedUser.grade,
-        bio: updatedUser.bio,
-        role: updatedUser.role,
-        updatedAt: updatedUser.updatedAt,
-      },
-    });
-  } catch (error) {
-    console.error("Profile update error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ user: updated }, { status: 200 });
+  } catch (err) {
+    console.error("PUT /api/profile error:", err);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

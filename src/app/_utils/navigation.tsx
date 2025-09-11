@@ -15,9 +15,9 @@ export function buildNavigation(role?: string): Navigation {
     { segment: "dashboard", title: "Dashboard", icon: <DashboardIcon /> },
     { segment: "profile", title: "Profile", icon: <AccountCircleIcon /> },
     { segment: "quiz", title: "Quiz", icon: <QuizIcon /> },
-    { segment: "explorecareer", title: "Career suggestions", icon: <WorkIcon /> },
-    { segment: "forum", title: "Forum", icon: <ForumIcon /> },
-    { segment: "explore", title: "Explore careers", icon: <ExploreIcon /> },
+    { segment: "careersuggestion", title: "Career suggestions", icon: <WorkIcon /> },
+    { segment: "discussion", title: "Discussion Forum", icon: <ForumIcon /> },
+    { segment: "careerexplore", title: "Explore careers", icon: <ExploreIcon /> },
   ];
 
   if (role === "admin") {

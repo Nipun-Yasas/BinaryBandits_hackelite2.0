@@ -1,6 +1,564 @@
-'use client';
+"use client";
 
-export default function Page() {
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import theme from "../../../theme";
 
-  return <div>dashboard</div>;
+import {
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Container,
+  Paper,
+  Typography,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Divider,
+  Skeleton,
+} from "@mui/material";
+import { motion } from "framer-motion";
+import {
+  Award,
+  BookOpen,
+  MessageCircle,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+
+import { useAuth } from "../../_providers/AuthProvider";
+import DashboardSkeleton from "./components/DashboardSkeleton";
+
+type ActivityItem = {
+  id: string;
+  type: "enroll" | "quiz" | "quiz_pass" | "complete" | "rating";
+  title: string;
+  subtitle?: string;
+  at: string; // ISO date
+  href?: string;
+};
+
+export default function Dashboard() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+  const [recentLoading, setRecentLoading] = useState(true);
+  const [activities, setActivities] = useState<ActivityItem[]>([]);
+  const VISIBLE_COUNT = 5;
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [user, loading, router]);
+
+  useEffect(() => {
+    if (!user) return;
+    let ignore = false;
+    setRecentLoading(true);
+    (async () => {
+      try {
+        const res = await fetch("/api/activity/recent?limit=12", {
+          cache: "no-store",
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Failed to load recent activity");
+        const data = await res.json();
+        if (!ignore) setActivities(Array.isArray(data.items) ? data.items : []);
+      } catch (e) {
+        if (!ignore) setActivities([]);
+        console.error(e);
+      } finally {
+        if (!ignore) setRecentLoading(false);
+      }
+    })();
+    return () => {
+      ignore = true;
+    };
+  }, [user]);
+
+  const handleQuickAction = (action: string) => {
+    switch (action) {
+      case "courses":
+        // TODO: Navigate to courses page
+        break;
+      case "mentors":
+        router.push("/findmentor");
+        break;
+      case "messages":
+        router.push("/chat");
+        break;
+      case "progress":
+        // TODO: Navigate to progress page
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleGetStarted = () => {
+    router.push("/profile");
+  };
+  if (loading) {
+    return <DashboardSkeleton />;
+  }
+  if (!user) {
+    return null;
+  }
+
+  return (
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        {/* Welcome Section */}
+        <Box sx={{ mb: 4 }}>
+          <Typography
+            variant="h3"
+            fontWeight="bold"
+            sx={{ background: "none", mb: 1 }}
+          >
+            <Box component="span" sx={{ color: "#007BFF" }}>
+              Welcome back,
+            </Box>{" "}
+            <Box component="span" sx={{ color: "text.primary" }}>
+              {user.name.split(" ")[0]}
+            </Box>{" "}
+            👋
+          </Typography>
+          
+        </Box>
+
+        {/* Profile Summary */}
+        <Paper
+          elevation={10}
+          sx={{
+            p: 3,
+            mb: 4,
+            position: "relative",
+            zIndex: 1,
+            backdropFilter: "blur(10px) saturate(1.08)",
+            WebkitBackdropFilter: "blur(10px) saturate(1.08)",
+            borderRadius: 3,
+            boxShadow:
+              theme.palette.mode === "dark"
+                ? "0 10px 40px rgba(0,0,0,0.45)"
+                : "0 10px 40px rgba(0,0,0,0.12)",
+            transition:
+              "background-color 200ms ease, backdrop-filter 200ms ease",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              mb: 3,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
+              <Avatar
+                src={user.avatarUrl || undefined}
+                sx={{
+                  width: 120,
+                  height: 120,
+                  background:
+                    "linear-gradient(135deg, #007BFF 0%, #6A0DAD 100%)",
+                  fontSize: "3rem",
+                  fontWeight: 700,
+                }}
+              ></Avatar>
+              <Box>
+                <Typography variant="h5" fontWeight="bold">
+                  {user.name}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ mb: 1 }}
+                >
+                  {user.email}
+                </Typography>
+                
+                {/* Mobile-only Edit button (under role) */}
+                <Box
+                  sx={{
+                    display: "none",
+                    "@media (max-width: 640px)": { display: "block", mt: 2 },
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    size="medium"
+                    onClick={() => router.push("/profile")}
+                  >
+                    Edit Profile
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => router.push("/profile")}
+              sx={{
+                mt: 1,
+                // Hide this button on small screens (< 640px)
+                "@media (max-width: 640px)": { display: "none" },
+              }}
+            >
+              Edit Profile
+            </Button>
+          </Box>
+
+          {/* Skills Summary */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              gap: 3,
+            }}
+          >
+           
+            </Box>
+           
+        </Paper>
+
+        {/* Quick Actions */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2, 1fr)",
+              md: "repeat(4, 1fr)",
+            },
+            gap: 3,
+            mb: 4,
+          }}
+        >
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Paper
+              onClick={() => handleQuickAction("courses")}
+              elevation={10}
+              sx={{
+                textAlign: "center",
+                cursor: "pointer",
+                p: 3,
+                mb: 4,
+                position: "relative",
+                zIndex: 1,
+                backdropFilter: "blur(10px) saturate(1.08)",
+                WebkitBackdropFilter: "blur(10px) saturate(1.08)",
+                borderRadius: 3,
+                boxShadow:
+                  theme.palette.mode === "dark"
+                    ? "0 10px 40px rgba(0,0,0,0.45)"
+                    : "0 10px 40px rgba(0,0,0,0.12)",
+                transition:
+                  "background-color 200ms ease, backdrop-filter 200ms ease",
+                "&:hover": {
+                  boxShadow: "0 8px 25px rgba(0, 123, 255, 0.2)",
+                },
+              }}
+            >
+              <BookOpen size={40} color="#007BFF" />
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                sx={{ mt: 1, mb: 0.5 }}
+              >
+                Career Quiz
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Take the quize to find your path
+              </Typography>
+            </Paper>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Paper
+              onClick={() => handleQuickAction("mentors")}
+              elevation={10}
+              sx={{
+                textAlign: "center",
+                cursor: "pointer",
+                p: 3,
+                mb: 4,
+                position: "relative",
+                zIndex: 1,
+                backdropFilter: "blur(10px) saturate(1.08)",
+                WebkitBackdropFilter: "blur(10px) saturate(1.08)",
+                borderRadius: 3,
+                boxShadow:
+                  theme.palette.mode === "dark"
+                    ? "0 10px 40px rgba(0,0,0,0.45)"
+                    : "0 10px 40px rgba(0,0,0,0.12)",
+                transition:
+                  "background-color 200ms ease, backdrop-filter 200ms ease",
+                "&:hover": {
+                  boxShadow: "0 8px 25px rgba(0, 123, 255, 0.2)",
+                },
+              }}
+            >
+              <Users size={40} color="#6A0DAD" />
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                sx={{ mt: 1, mb: 0.5 }}
+              >
+                AI Chatbot
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Chat with our AI assistant
+              </Typography>
+            </Paper>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Paper
+              onClick={() => handleQuickAction("messages")}
+              elevation={10}
+              sx={{
+                textAlign: "center",
+                cursor: "pointer",
+                p: 3,
+                mb: 4,
+                position: "relative",
+                zIndex: 1,
+                backdropFilter: "blur(10px) saturate(1.08)",
+                WebkitBackdropFilter: "blur(10px) saturate(1.08)",
+                borderRadius: 3,
+                boxShadow:
+                  theme.palette.mode === "dark"
+                    ? "0 10px 40px rgba(0,0,0,0.45)"
+                    : "0 10px 40px rgba(0,0,0,0.12)",
+                transition:
+                  "background-color 200ms ease, backdrop-filter 200ms ease",
+                "&:hover": {
+                  boxShadow: "0 8px 25px rgba(0, 123, 255, 0.2)",
+                },
+              }}
+            >
+              <MessageCircle size={40} color="#FF7A00" />
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                sx={{ mt: 1, mb: 0.5 }}
+              >
+                Community
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Ask questions & get help
+              </Typography>
+            </Paper>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Paper
+              onClick={() => handleQuickAction("progress")}
+              elevation={10}
+              sx={{
+                textAlign: "center",
+                cursor: "pointer",
+                p: 3,
+                mb: 4,
+                position: "relative",
+                zIndex: 1,
+                backdropFilter: "blur(10px) saturate(1.08)",
+                WebkitBackdropFilter: "blur(10px) saturate(1.08)",
+                borderRadius: 3,
+                boxShadow:
+                  theme.palette.mode === "dark"
+                    ? "0 10px 40px rgba(0,0,0,0.45)"
+                    : "0 10px 40px rgba(0,0,0,0.12)",
+                transition:
+                  "background-color 200ms ease, backdrop-filter 200ms ease",
+                "&:hover": {
+                  boxShadow: "0 8px 25px rgba(0, 123, 255, 0.2)",
+                },
+              }}
+            >
+              <Award size={40} color="#28a745" />
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                sx={{ mt: 1, mb: 0.5 }}
+              >
+                Career Explorer
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Explore career paths
+              </Typography>
+            </Paper>
+          </motion.div>
+        </Box>
+
+        {/* Recent Activity */}
+        <Paper
+          elevation={10}
+          sx={{
+            textAlign: "center",
+            p: 3,
+            mb: 4,
+            position: "relative",
+            zIndex: 1,
+            backdropFilter: "blur(10px) saturate(1.08)",
+            WebkitBackdropFilter: "blur(10px) saturate(1.08)",
+            borderRadius: 3,
+            boxShadow:
+              theme.palette.mode === "dark"
+                ? "0 10px 40px rgba(0,0,0,0.45)"
+                : "0 10px 40px rgba(0,0,0,0.12)",
+            transition:
+              "background-color 200ms ease, backdrop-filter 200ms ease",
+            "&:hover": {
+              boxShadow: "0 8px 25px rgba(0, 123, 255, 0.2)",
+            },
+          }}
+        >
+          <Typography variant="h5" fontWeight="bold" sx={{ mb: 3 }}>
+            Recent Activity
+          </Typography>
+
+          {recentLoading ? (
+            <Box sx={{ px: 1 }}>
+              {[...Array(4)].map((_, i) => (
+                <Box
+                  key={i}
+                  sx={{ display: "flex", alignItems: "center", py: 1.5 }}
+                >
+                  <Skeleton
+                    variant="circular"
+                    width={40}
+                    height={40}
+                    sx={{ mr: 2 }}
+                  />
+                  <Box sx={{ flex: 1 }}>
+                    <Skeleton width="40%" height={20} />
+                    <Skeleton width="60%" height={18} />
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          ) : activities.length === 0 ? (
+            <Box sx={{ textAlign: "center", py: 4 }}>
+              <TrendingUp size={60} color="#ccc" />
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                sx={{ mt: 2, mb: 1 }}
+              >
+                No recent activity
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Enroll in courses, take quizzes, and complete lessons to see
+                them here.
+              </Typography>
+              <Button
+                variant="contained"
+                onClick={handleGetStarted}
+                sx={{
+                  background:
+                    "linear-gradient(135deg, #007BFF 0%, #6A0DAD 100%)",
+                  "&:hover": {
+                    background:
+                      "linear-gradient(135deg, #0056CC 0%, #4A0080 100%)",
+                  },
+                }}
+              >
+                Get Started
+              </Button>
+            </Box>
+          ) : (
+            <>
+              <List disablePadding>
+                {activities.slice(0, VISIBLE_COUNT).map((a, idx) => {
+                  const dt = new Date(a.at);
+                  const when = dt.toLocaleString();
+                  const iconBg =
+                    a.type === "complete"
+                      ? "#e9f7ef"
+                      : a.type === "quiz_pass"
+                        ? "#e7f2ff"
+                        : a.type === "quiz"
+                          ? "#fff7e8"
+                          : a.type === "rating"
+                            ? "#f5e9ff"
+                            : "#eaf2ff";
+                  const icon =
+                    a.type === "complete" ? (
+                      <Award size={22} color="#28a745" />
+                    ) : a.type === "quiz_pass" ? (
+                      <TrendingUp size={22} color="#007BFF" />
+                    ) : a.type === "quiz" ? (
+                      <TrendingUp size={22} color="#FF7A00" />
+                    ) : a.type === "rating" ? (
+                      <Users size={22} color="#6A0DAD" />
+                    ) : (
+                      <BookOpen size={22} color="#007BFF" />
+                    );
+                  return (
+                    <Box key={a.id}>
+                      <ListItem
+                        alignItems="flex-start"
+                        sx={{ px: 0, cursor: a.href ? "pointer" : "default" }}
+                        onClick={() => a.href && router.push(a.href)}
+                      >
+                        <ListItemAvatar>
+                          <Box
+                            sx={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: "50%",
+                              display: "grid",
+                              placeItems: "center",
+                              background: iconBg,
+                            }}
+                          >
+                            {icon}
+                          </Box>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={a.title}
+                          secondary={
+                            <span>
+                              {a.subtitle ? `${a.subtitle} • ` : ""}
+                              {when}
+                            </span>
+                          }
+                          primaryTypographyProps={{ fontWeight: 600 }}
+                        />
+                      </ListItem>
+                      {idx < Math.min(VISIBLE_COUNT, activities.length) - 1 && (
+                        <Divider sx={{ my: 1 }} />
+                      )}
+                    </Box>
+                  );
+                })}
+              </List>
+
+              {activities.length > VISIBLE_COUNT && (
+                <Box
+                  sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}
+                >
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => router.push("/dashboard/recent")}
+                  >
+                    View more
+                  </Button>
+                </Box>
+              )}
+            </>
+          )}
+        </Paper>
+      </motion.div>
+    </Container>
+  );
 }
